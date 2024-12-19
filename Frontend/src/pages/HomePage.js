@@ -1,32 +1,3 @@
-// import React, { useState } from "react";
-
-// function HomePage() {
-
-//   const handleClick = () => {
-//     // Do something when the button is clicked
-//     alert('Button clicked!');
-//   };
-
-
-//   return (
-    
-//     <>
-//     <h1>Welcome to your Recipe Page!</h1> 
-//     <button onClick={handleClick} >
-//       Sign In
-//     </button>
-//     <button onClick={handleClick} >
-//       Sign Up
-//     </button>
-//     </>
-
-
-
-//   );
-// }
-
-// export default HomePage;
-
 import React, { useState } from 'react';
 
 
@@ -34,10 +5,16 @@ function HomePage() {
   const [isHoveringSignIn, setIsHoveringSignIn] = useState(false);
   const [isHoveringSignUp, setIsHoveringSignUp] = useState(false);
 
-  const handleClick = (action) => {
+  const handleClickSignIn = (action) => {
    // alert(`${action} button clicked!`);
    window.location.href = "/signin";
   };
+
+
+  const handleClickSignUp = (action) => {
+    // alert(`${action} button clicked!`);
+    window.location.href = "/signup";
+   };
 
   const handleMouseEnter = () => {
     setIsHoveringSignIn(true);
@@ -46,8 +23,6 @@ function HomePage() {
   const handleMouseLeave = () => {
     setIsHoveringSignIn(false);
   };
-
-
 
   const handleMouseEnterSignUp = () => {
     setIsHoveringSignUp(true);
@@ -70,11 +45,11 @@ function HomePage() {
 
         {/* Buttons */}
         <div style={styles.buttonContainer}>
-          <button onClick={() => handleClick("Sign In")} onMouseEnter={handleMouseEnter}
+          <button onClick={() => handleClickSignIn("Sign In")} onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave} style={isHoveringSignIn ?styles.hoverbutton : styles.button }>
             Sign In
           </button>
-          <button onClick={() => handleClick("Sign Up")} onMouseEnter={handleMouseEnterSignUp}
+          <button onClick={() => handleClickSignUp("Sign Up")} onMouseEnter={handleMouseEnterSignUp}
        onMouseLeave={handleMouseLeaveSignup} style={isHoveringSignUp ?styles.hoverbutton : styles.button }>
             Sign Up
           </button>
