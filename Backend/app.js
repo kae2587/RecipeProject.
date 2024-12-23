@@ -170,6 +170,38 @@ app.use(session({
   });
 
 
+  app.post('/getRecipes', async (req, res) => {
+
+    try {
+    
+      const { username } = req.body;
+      const user = await User.findOne({ username });
+      const filter = { user };
+        
+        // Fetch listings matching the filter
+        const listings = await Recipe.find(filter);
+        //console.log(listings);
+        
+        const transformedListings = listings.map((listing) => {
+          return {
+            title: listing.title,
+            user: listing.user, // Include the user field in the response
+            description: listing.description,
+            date: listing.date,
+
+          };
+        });
+     
+
+      res.json(transformedListings);
+   
+    } catch (error) {
+      console.error('Error fetching Recipes:', error);
+      res.status(500).send('Error fetching Recipes');
+    }
+
+  });
+
 
   // Start the server
 const PORT = process.env.PORT || 8001; // Use environment variable or default to 8001
