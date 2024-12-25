@@ -1,12 +1,27 @@
 import React, { useState, useEffect } from "react";
+import { Link } from 'react-router-dom';
 
 function YourRecipePage() {
   const [userRecipes, setUserRecipes] = useState([]);
-
   
   const [isRecipeHovering, setIsRecipeHovering] = useState(false);
   const [isFeaturedHovering, setIsFeaturedHovering] = useState(false);
   const [isMealHovering, setIsMealHovering] = useState(false);
+
+  const [hoverStates, setHoverStates] = useState([]);
+  
+
+
+
+  const handleMouseEnter = (id) => {
+    setHoverStates((prevStates) => ({ ...prevStates, [id]: true }));
+  };
+
+  const handleMouseLeave = (id) => {
+    setHoverStates((prevStates) => ({ ...prevStates, [id]: false }));
+  };
+
+
 
   const handleMouseEnterRecipe = () => {
     setIsRecipeHovering(true);
@@ -15,7 +30,6 @@ function YourRecipePage() {
   const handleMouseLeaveRecipe = () => {
     setIsRecipeHovering(false);
   };
-
 
 
   const handleMouseEnterFeatured = () => {
@@ -52,6 +66,7 @@ function YourRecipePage() {
             const user = {
               username: data.username,
             };
+
             const responsetwo = await fetch(' http://localhost:8001/getRecipes', {
               method: 'POST', 
               headers: { 'Content-Type': 'application/json' }, 
@@ -60,9 +75,11 @@ function YourRecipePage() {
             })
 
             if (responsetwo.ok) {
-              
+
               const data2 = await responsetwo.json();
               setUserRecipes(data2);
+
+            
             }
 
           }
@@ -82,40 +99,56 @@ function YourRecipePage() {
     <>
  <div >   
 <header style = {styles.headerdiv}>
-<a href = "/signin" 
+<a href = "/yourrecipe" 
 onMouseEnter={handleMouseEnterRecipe}
 onMouseLeave={handleMouseLeaveRecipe}
-style={isRecipeHovering ? styles.headerafterWord : styles.headerWord}> 
+style={isRecipeHovering ? styles.linkHover : styles.link}>
+
 Your Recipes 
 </a>
 
 <a href = "/signin" 
 onMouseEnter={handleMouseEnterFeatured}
 onMouseLeave={handleMouseLeaveFeatured}
-style={isFeaturedHovering ? styles.headerafterWord : styles.headerWord}> 
+style={isFeaturedHovering ? styles.linkHover : styles.link}> 
 Featured Recipes </a>
 
 <a href = "/signin" 
 onMouseEnter={handleMouseEnterMeal}
 onMouseLeave={handleMouseLeaveMeal}
-style={isMealHovering ? styles.headerafterWord : styles.headerWord}>
+style={isMealHovering ? styles.linkHover : styles.link}>
  Meal Generator </a>
 
 </header>
 </div>
-
+<h style={styles.header}>My Recipes</h>
+<div style={styles.fullform}>
 {userRecipes.length === 0 ? (
       <p>No recipes found.</p>
     ) : (
       userRecipes.map((listing) => (
-        <div key={listing.id}>
+
+
+<Link to={`/certainrecipe?title=${encodeURIComponent(listing._id)}` } style={styles.linkp}>
+        <div key={listing.id} 
+        onMouseEnter={() => handleMouseEnter(listing.id)}
+        onMouseLeave={() => handleMouseLeave(listing.id)}
+        style={hoverStates[listing.id] ? styles.formtwo : styles.form }
+        >
+   
           <h2 >{listing.title}</h2>
-          <p>{listing.date}</p>
-          <p>{listing.description}</p>
+          <p >{listing.description}</p>
+          <p > <b>Date Posted:</b> {listing.date.slice(0, 10)}</p>
+         
         </div>
+</Link>
+
       ))
     )}
 
+</div>
+
+<a href = "/createnewrecipe" style={styles.linkfor} > + Add a New Recipe</a>
 
   </>
 
@@ -127,7 +160,7 @@ const styles = {
     fullpage: {
         width: "100%",
         minHeight: "100vh", // Ensures the background covers the entire page content
-        backgroundColor: "#97AFCB",
+       // backgroundColor: "#97AFCB",
         display: "flex",
         justifyContent: "center",
         alignItems: "flex-start", // Aligns content at the top, allowing it to grow downward
@@ -139,37 +172,80 @@ const styles = {
         fontFamily: "'Georgia', serif",
         textAlign: "center",
         color: "#000000",
-        marginBottom: "2rem",
-        top: 0, // Sticks to the top of the viewport
-        zIndex: 10, // Ensures it stays above other content
-        padding: "1rem 0",
-        width: "100%", // Stretches across the full width of the container
+       // marginBottom: "2rem",
+        marginTop: "2rem",
+        position: "relative", // Ensure proper positioning
+        top: 0,
+        zIndex: 10,
+        padding: "1rem",
+        width: "100%",
+        display: "flex", // Enables Flexbox
+        alignItems: "center", // Centers content vertically
+        justifyContent: "center", // Centers content horizontally
+        fontWeight: "bold"
       },
+
+      linkp:{
+        textDecoration: "none",
+          color: 'inherit',
+      },
+      link: {
+        color: "#ffffff",
+        textDecoration: "none",
+        fontSize: "1.2rem",
+        fontWeight: "bold",
+      },
+      linkHover: {
+        color: "#000000",
+        textDecoration: "none",
+        fontSize: "1.2rem",
+        fontWeight: "bold",
+      },
+      
     
       form: {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        backgroundColor: "#f4f4f4",
+       backgroundColor: "#f4f4f4",
+        fontFamily: "'Georgia', serif",
         border: "3px solid #000",
         borderRadius: "15px",
-        padding: "2rem",
+        padding: "2rem 1rem",
         width: "450px",
         boxSizing: "border-box",
+         margin: "1rem",
+         textAlign: "center",
+         textDecoration: "none",
       },
 
-      button: {
-        backgroundColor: "#ffffff",
-        color: "#000000",
-        border: "2px solid #000",
-        borderRadius: "30px",
-        padding: "0.8rem 3rem",
-        fontSize: "1rem",
-        fontWeight: "bold",
-        cursor: "pointer",
-        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-        transition: "background-color 0.3s ease",
+      formtwo: {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        backgroundColor: "#000000",
+        fontFamily: "'Georgia', serif",
+        border: "3px solid #97AFCB", // This sets the border to white
+        borderRadius: "15px",
+        padding: "2rem 1rem",
+        width: "450px",
+        boxSizing: "border-box",
+        margin: "1rem",
+        textAlign: "center",
+        textDecoration: "none",
+        color: "#ffffff"
       },
+
+      fullform: {
+        width: "100vw", // Use full viewport width
+        display: "flex",
+        alignItems: "flex-start",
+        flexDirection: "row",
+        flexWrap: "wrap",
+        padding: "1rem 1.5rem",
+        boxSizing: "border-box", // Ensure border/padding doesn’t reduce width
+      },
+
 
       label: {
         fontSize: "1.5rem",
@@ -192,19 +268,6 @@ const styles = {
       },
 
 
-      Deletebutton: {
-        backgroundColor: "#ffffff",
-        color: "#000000",
-        border: "1.5px solid #000",
-        borderRadius: "30px",
-        padding: "0.4rem 1.7rem",
-        fontSize: "1rem",
-        fontWeight: "bold",
-        cursor: "pointer",
-        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-        transition: "background-color 0.3s ease",
-        margin: "0.6rem"
-      },
 
      Addbutton: {
         backgroundColor: "#ffffff",
@@ -237,12 +300,23 @@ const styles = {
 
 
       headerdiv:{
+        display: "flex",
+        justifyContent: "space-around",
         backgroundColor: "#577493",
-        padding: "1rem 1.5rem",
-        border: "1px solid #000",
-        borderRadius: "2px",
+        padding: "1rem",
+        fontFamily: "'Georgia', serif",
       },
 
+      linkfor:{
+        padding: "3rem 3.5rem",
+        color:"#000000",
+        fontSize: "1.2rem",
+        margin: "0.5rem",
+        fontWeight: "bold",
+        fontFamily: "'Georgia', serif",
+        textDecoration: "none",
+        
+      },
 
       headerWord:{
         padding: "1rem 3.5rem",
@@ -271,60 +345,5 @@ const styles = {
 export default YourRecipePage;
 
 
-//const [userListings, setUserListings] = useState([]);
 
-
-
-// useEffect(() => {
-//   const fetchUserData = async () => {
-//     const username = getQueryParam("title");
-//     if (!username) {
-//       setError("Error: Not Logged in");
-//       return;
-//     }
-
-//     try {
-//       const response = await fetch(
-//         `http://localhost:8001/fetch-user-attributes?title=${encodeURIComponent(
-//           username
-//         )}`
-//       );
-//       if (!response.ok) {
-//         throw new Error("Failed to fetch user attributes");
-//       }
-//       const data = await response.json();
-//       setUserData(data);
-
-//       const responseTwo = await fetch(
-//         `http://localhost:8001/getUser-listings?user=${encodeURIComponent(username)}`
-//       );
-//       if (!responseTwo.ok) {
-//         throw new Error("Failed to fetch listings");
-//       }
-
-//       const data2 = await responseTwo.json();
-//       setUserListings(data2);
-//     } catch (error) {
-//       console.error("Error fetching user attributes or listings:", error);
-//       setError("Error loading user data");
-//     }
-//   };
-
-//   fetchUserData();
-// }, []); 
-
-
-{/* <ListingsContainer>
-{userListings.map((listing) => (
-<ListingCard key={listing.id}>
-{listing.photo && (
-  <Link to={`/customimage?title=${encodeURIComponent(listing.title)}`}>
-  <ListingImage src={listing.photo} alt={listing.title} />
-  </Link>
-)}
-    <h2 className="listing-title">{listing.title}</h2>
-    <p className="listing-price">${listing.price}</p>
-    <p className="listing-description">{listing.description}</p>
-</ListingCard>
-))}
-</ListingsContainer> */}
+// style={styles.form} 

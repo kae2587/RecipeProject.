@@ -5,6 +5,8 @@ import HomePage from "./pages/HomePage";
 import SignIn from './pages/SigninPage';
 import SignUp from './pages/SignUpPage';
 import YourRecipe from './pages/YourRecipePage';
+import CreateNewRecipe from './pages/CreateNewRecipe';
+import CertainRecipe from './pages/CertainRecipe';
 
 // import './App.css'; // Uncomment this if you have custom styles
 
@@ -16,6 +18,8 @@ function App() {
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/yourrecipe" element={<YourRecipe />} />
+        <Route path="/createnewrecipe" element={<CreateNewRecipe />} />
+        <Route path="/certainrecipe" element={<CertainRecipe />} />
       </Routes>
     </Router>
   );

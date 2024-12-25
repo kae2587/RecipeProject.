@@ -182,13 +182,14 @@ app.use(session({
         const listings = await Recipe.find(filter);
         //console.log(listings);
         
-        const transformedListings = listings.map((listing) => {
+        const transformedListings = listings.map((listing, index) => {
           return {
             title: listing.title,
             user: listing.user, // Include the user field in the response
             description: listing.description,
             date: listing.date,
-
+            _id: listing._id,
+            id: index,
           };
         });
      
@@ -201,6 +202,71 @@ app.use(session({
     }
 
   });
+
+
+  app.post('/getCertainRecipe', async (req, res) => {
+
+    try {
+    
+      const { _id } = req.body;
+      const filter = { _id };
+        
+        // Fetch listings matching the filter
+        const listings = await Recipe.find(filter);
+        //console.log(listings);
+        
+        const transformedListings = listings.map((listing) => {
+          return {
+            title: listing.title,
+            user: listing.user, // Include the user field in the response
+            description: listing.description,
+            date: listing.date,
+            _id: listing._id,
+            steps: listing.steps,
+          };
+        });
+     
+
+      res.json(transformedListings);
+   
+    } catch (error) {
+      console.error('Error fetching Recipes:', error);
+      res.status(500).send('Error fetching Recipes');
+    }
+
+  });
+
+
+  app.post('/getSteps', async (req, res) => {
+
+    try {
+    
+      const { _id } = req.body;
+      const filter = { _id };
+        
+        // Fetch listings matching the filter
+        const listings = await Recipe.find(filter);
+        //console.log(listings);
+        
+        const transformedListings = listings.map((listing) => {
+          return {
+            steps: listing.steps,
+          };
+        });
+     
+      res.json(transformedListings);
+   
+    } catch (error) {
+      console.error('Error fetching Steps:', error);
+      res.status(500).send('Error fetching Steps');
+    }
+
+  });
+
+
+
+
+
 
 
   // Start the server

@@ -113,7 +113,7 @@ function CreateNewRecipe() {
     <>
  <div >   
 <header style = {styles.headerdiv}>
-<a href = "/signin" 
+<a href = "/yourrecipe" 
 onMouseEnter={handleMouseEnterRecipe}
 onMouseLeave={handleMouseLeaveRecipe}
 style={isRecipeHovering ? styles.headerafterWord : styles.headerWord}> 
@@ -197,7 +197,7 @@ const styles = {
     fullpage: {
         width: "100%",
         minHeight: "100vh", // Ensures the background covers the entire page content
-        backgroundColor: "#97AFCB",
+       // backgroundColor: "#97AFCB",
         display: "flex",
         justifyContent: "center",
         alignItems: "flex-start", // Aligns content at the top, allowing it to grow downward
@@ -291,19 +291,7 @@ const styles = {
       },
 
 
-      button: {
-        backgroundColor: "#ffffff",
-        color: "#000000",
-        border: "2px solid #000",
-        borderRadius: "30px",
-        padding: "0.8rem 3rem",
-        fontSize: "1rem",
-        fontWeight: "bold",
-        cursor: "pointer",
-        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-        transition: "background-color 0.3s ease",
-        margin: "0.6rem"
-      },
+   
 
 
       headerdiv:{
