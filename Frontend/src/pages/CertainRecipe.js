@@ -7,11 +7,34 @@ const [userRecipe, setUserRecipe] = useState([]);
 const [id, setId] = useState(0);
 
 
+
 const [headerBools, setHeaderBools] = useState([false, false, false])
 
 
-const handleDelete = () =>{
-alert ("delete");
+
+const handleDelete = async () => {
+
+const user = {
+    _id: id,
+  };
+
+  const responsetwo = await fetch(' http://localhost:8001/deleterecipe', {
+    method: 'POST', 
+    headers: { 'Content-Type': 'application/json' }, 
+    credentials: 'include', 
+    body: JSON.stringify(user) 
+  })
+
+  if (responsetwo.ok) {
+    alert("Recipe Deleted Successfully");
+    window.location.href=  `/yourrecipe`
+
+  }
+
+
+
+
+
 };
 
 const handleEdit = () =>{
@@ -64,14 +87,14 @@ const handleMouseEnter = (id) => {
       if (responsetwo.ok) {
         const data2 = await responsetwo.json();
         setUserRecipe(data2);
-
+        
       }
 
   };
 
   useEffect(() => {
     getRecipe();
-   }, [] );
+   },  );
 
 
 return(
@@ -262,10 +285,7 @@ return(
        
       },
     
-      buttonHover: {
-        opacity: "0.9",
-        //color: "#e7e7e7",
-      },
+
     
       buttonHover:{
         backgroundColor: "#000000",

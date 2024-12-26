@@ -176,7 +176,25 @@ app.use(session({
 
 
 
-
+  app.post('/deleterecipe', async (req, res) => {
+    try {
+      const { _id } = req.body; 
+  
+        // Delete the recipe with the specified _id
+        const deleteResult = await Recipe.deleteOne({ _id });
+  
+        if (deleteResult.deletedCount > 0) {
+          res.status(200).send("Recipe deleted successfully");
+        } else {
+          res.status(404).send("Recipe not found");
+        }
+    
+    } catch (error) {
+      console.error("Error deleting recipe:", error);
+      res.status(500).send("Error deleting recipe");
+    }
+  });
+  
 
 
   app.post('/login', async (req, res) => {

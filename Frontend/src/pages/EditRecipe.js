@@ -7,8 +7,6 @@ function EditRecipe() {
   //const [inputs, setInputs] = useState([{ id: 1, value: "" }]); // Initial input section
   const [inputs, setInputs] = useState([]);
   const [id, setId] = useState(null);
-  const [userRecipe, setUserRecipe] = useState([]);
-  const[steps, setSteps] = useState([])
   const [headerBools, setHeaderBools] = useState([false, false, false])
 
   const handleMouseEnter = (id) => {
@@ -49,7 +47,6 @@ const getSteps = async (title) => {
       if (responsetwo.ok) {
         const data2 = await responsetwo.json();
         const fetchedSteps = data2[0].steps;
-        setSteps(fetchedSteps);
         setInputs(fetchedSteps.map((step, index) => ({ id: index + 1, value: step })));
       }
 
@@ -81,7 +78,7 @@ const getSteps = async (title) => {
     
           if (responsetwo.ok) {
             const data2 = await responsetwo.json();
-            setUserRecipe(data2);
+    
             setTitle(data2[0].title);
             setDescription(data2[0].description);
 
@@ -91,20 +88,48 @@ const getSteps = async (title) => {
     
       useEffect(() => {
         getRecipe();
-       }, [] );
+       },  );
 
 
 
 
 
     
+    const handleAddInput = (id) => {
+        setInputs(prevInputs => {
+          const updatedInputs = [];
+          let newId = id + 1; 
+      
+          prevInputs.forEach(input => {
+            updatedInputs.push(input); 
+            if (input.id === id) {
+              
+              updatedInputs.push({ id: newId, value: "" });
+            }
+          });
+      
+          // Reassign sequential IDs to maintain order
+          return updatedInputs.map((input, index) => ({ ...input, id: index + 1 }));
+        });
+      };
 
 
-  const handleAddInput = () => {
-    const newInput = { id: inputs.length + 1, value: "" };
-    setInputs([...inputs, newInput]); // Add the new input to the state
-  };
-
+      const handleAddInputFirst = () => {
+        setInputs(prevInputs => {
+            // Create a new input with ID of 1
+            const newInput = { id: 1, value: "" };
+    
+            // Update the rest of the inputs to have incremented IDs
+            const updatedInputs = prevInputs.map(input => ({
+                ...input,
+                id: input.id + 1
+            }));
+    
+            // Add the new input at the start of the array
+            return [newInput, ...updatedInputs];
+        });
+    };
+      
 
   const handleInputChange = (id, newValue) => {
     setInputs(inputs.map(input => 
@@ -215,10 +240,16 @@ style={headerBools[2] ? styles.linkHover : styles.link}>
         value={description}
         style={styles.input}
         onChange={(e) => setDescription(e.target.value)}
-      />
+      />    
+
+    <button type="button" onClick={() => handleAddInputFirst(0) }  style={styles.Deletebutton}>
+        Add Another Step Below
+      </button>
+
+
 
       {inputs.map(input => (
-        <div key={input.id}>
+        <div key={input.id} style = {styles.stepForm}>
           <label htmlFor={`input-${input.id}`} style={styles.label}>
             Step {input.id}:
           </label>
@@ -237,13 +268,15 @@ style={headerBools[2] ? styles.linkHover : styles.link}>
           >
             Delete Step
           </button>
+        <button type="button" onClick={() => handleAddInput(input.id) }  style={styles.Deletebutton}>
+        Add Another Step Below
+      </button>
+
         </div>
       ))}
 
 
-      <button type="button" onClick={handleAddInput} style={styles.Addbutton}>
-        Add Another Step
-      </button>
+
 
       <button type="submit" style={styles.button}>Edit Recipe</button>
     </form>
@@ -265,6 +298,9 @@ const styles = {
         justifyContent: "center",
         alignItems: "flex-start", // Aligns content at the top, allowing it to grow downward
         padding: "2rem 0", // Adds spacing at the top and bottom
+      },
+      stepForm:{
+        marginBottom: "2.5rem",
       },
     
       header: {
@@ -298,7 +334,7 @@ const styles = {
         color: "#000000",
         border: "2px solid #000",
         borderRadius: "30px",
-        padding: "0.8rem 3rem",
+        padding: ".8rem 3rem",
         fontSize: "1rem",
         fontWeight: "bold",
         cursor: "pointer",
