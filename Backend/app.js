@@ -142,6 +142,43 @@ app.use(session({
     }
   });
 
+
+
+  app.post('/editrecipe', async (req, res) => {
+    try {
+      const { title, description, username, steps, _id } = req.body;
+  console.log(_id);
+
+      const user = await User.findOne({ username });
+  
+      if (user) {
+        const updateResult = await Recipe.updateOne(
+          { _id },
+          { 
+            $set: { 
+              title: title,
+              description: description,
+              steps: steps,
+            } 
+          }
+        );
+  
+        res.status(200).send("Recipe updated successfully");
+      } else {
+        res.status(404).send("User not found");
+      }
+    } catch (error) {
+      console.error("Error updating recipe:", error);
+      res.status(500).send("Error updating recipe");
+    }
+  });
+  
+
+
+
+
+
+
   app.post('/login', async (req, res) => {
     try {
       const { username, password } = req.body;
@@ -248,7 +285,7 @@ app.use(session({
         const listings = await Recipe.find(filter);
         //console.log(listings);
         
-        const transformedListings = listings.map((listing) => {
+        const transformedListings = listings.map((listing, index) => {
           return {
             steps: listing.steps,
           };

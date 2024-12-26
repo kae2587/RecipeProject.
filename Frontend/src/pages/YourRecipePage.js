@@ -61,7 +61,7 @@ function YourRecipePage() {
         if (response.ok) {
           const data = await response.json();
           if (data.username) {
-            //alert (data.username);
+            
 
             const user = {
               username: data.username,
@@ -346,4 +346,3 @@ export default YourRecipePage;
 
 
 
-// style={styles.form} 

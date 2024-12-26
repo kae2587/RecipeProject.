@@ -108,7 +108,7 @@ const styles = {
   button: {
     backgroundColor: "#ffffff",
     color: "#000000",
-    border: "none",
+    border: "1px solid #000",
     borderRadius: "30px",
     padding: "0.8rem 3rem",
     fontSize: "1rem",
@@ -126,7 +126,7 @@ const styles = {
   hoverbutton:{
     backgroundColor: "#000000",
     color: "#ffffff",
-    border: "none",
+    border: "1px solid #000",
     borderRadius: "30px",
     padding: "0.8rem 3rem",
     fontSize: "1rem",

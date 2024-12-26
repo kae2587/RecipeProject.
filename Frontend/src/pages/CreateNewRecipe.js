@@ -112,27 +112,37 @@ function CreateNewRecipe() {
   return (
     <>
  <div >   
+
+
+
+
+
+
+    
 <header style = {styles.headerdiv}>
 <a href = "/yourrecipe" 
 onMouseEnter={handleMouseEnterRecipe}
 onMouseLeave={handleMouseLeaveRecipe}
-style={isRecipeHovering ? styles.headerafterWord : styles.headerWord}> 
+style={isRecipeHovering ? styles.linkHover : styles.link}> 
 Your Recipes 
 </a>
 
 <a href = "/signin" 
 onMouseEnter={handleMouseEnterFeatured}
 onMouseLeave={handleMouseLeaveFeatured}
-style={isFeaturedHovering ? styles.headerafterWord : styles.headerWord}> 
+style={isFeaturedHovering ? styles.linkHover : styles.link}> 
 Featured Recipes </a>
 
 <a href = "/signin" 
 onMouseEnter={handleMouseEnterMeal}
 onMouseLeave={handleMouseLeaveMeal}
-style={isMealHovering ? styles.headerafterWord : styles.headerWord}>
+style={isMealHovering ? styles.linkHover : styles.link}>
  Meal Generator </a>
 
 </header>
+
+
+
 </div>
 
 
@@ -217,14 +227,16 @@ const styles = {
       },
     
       form: {
+        
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         backgroundColor: "#f4f4f4",
         border: "3px solid #000",
         borderRadius: "15px",
-        padding: "2rem",
-        width: "450px",
+        //padding: "2rem",
+       // width: "450px",
+       padding: "2rem 3.5rem",
         boxSizing: "border-box",
       },
 
@@ -239,6 +251,7 @@ const styles = {
         cursor: "pointer",
         boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
         transition: "background-color 0.3s ease",
+        fontFamily: "'Georgia', serif",
       },
 
       label: {
@@ -273,7 +286,8 @@ const styles = {
         cursor: "pointer",
         boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
         transition: "background-color 0.3s ease",
-        margin: "0.6rem"
+        margin: "0.6rem",
+        fontFamily: "'Georgia', serif",
       },
 
      Addbutton: {
@@ -287,7 +301,8 @@ const styles = {
         cursor: "pointer",
         boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
         transition: "background-color 0.3s ease",
-        margin: "0.6rem"
+        margin: "0.6rem",
+        fontFamily: "'Georgia', serif",
       },
 
 
@@ -295,11 +310,30 @@ const styles = {
 
 
       headerdiv:{
+        display: "flex",
+        justifyContent: "space-around",
         backgroundColor: "#577493",
-        padding: "1rem 1.5rem",
-        border: "1px solid #000",
-        borderRadius: "2px",
+        padding: "1rem",
+        fontFamily: "'Georgia', serif",
+        marginBottom: "1rem",
       },
+
+//
+      link: {
+        color: "#ffffff",
+        textDecoration: "none",
+        fontSize: "1.2rem",
+        fontWeight: "bold",
+      },
+
+
+      linkHover: {
+        color: "#000000",
+        textDecoration: "none",
+        fontSize: "1.2rem",
+        fontWeight: "bold",
+      },
+
 
 
       headerWord:{

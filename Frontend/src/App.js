@@ -7,6 +7,7 @@ import SignUp from './pages/SignUpPage';
 import YourRecipe from './pages/YourRecipePage';
 import CreateNewRecipe from './pages/CreateNewRecipe';
 import CertainRecipe from './pages/CertainRecipe';
+import EditRecipe from './pages/EditRecipe';
 
 // import './App.css'; // Uncomment this if you have custom styles
 
@@ -20,6 +21,7 @@ function App() {
         <Route path="/yourrecipe" element={<YourRecipe />} />
         <Route path="/createnewrecipe" element={<CreateNewRecipe />} />
         <Route path="/certainrecipe" element={<CertainRecipe />} />
+        <Route path="/editrecipe" element={<EditRecipe />} />
       </Routes>
     </Router>
   );

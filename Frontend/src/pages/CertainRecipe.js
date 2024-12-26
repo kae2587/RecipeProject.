@@ -4,7 +4,22 @@ function CertainRecipe() {
 
 
 const [userRecipe, setUserRecipe] = useState([]);
+const [id, setId] = useState(0);
+
+
 const [headerBools, setHeaderBools] = useState([false, false, false])
+
+
+const handleDelete = () =>{
+alert ("delete");
+};
+
+const handleEdit = () =>{
+ //  window.location.href = "/editrecipe";
+
+ window.location.href=  `/editrecipe?title=${encodeURIComponent(id)}`
+
+    };
 
 const handleMouseEnter = (id) => {
     setHeaderBools((prevStates) => {
@@ -33,6 +48,7 @@ const handleMouseEnter = (id) => {
     if (!title) {
       return;
     }
+    setId(title);
    
     const user = {
         _id: title,
@@ -48,14 +64,9 @@ const handleMouseEnter = (id) => {
       if (responsetwo.ok) {
         const data2 = await responsetwo.json();
         setUserRecipe(data2);
+
       }
 
-
-
-
-
-
-   
   };
 
   useEffect(() => {
@@ -92,7 +103,6 @@ return(
           Meal Generator
         </a>
       </header>
-
       <div style={styles.content}>
         {userRecipe.map((listing) => (
           <div key={listing.id} >
@@ -128,6 +138,7 @@ return(
             )}
             <div style={styles.buttonContainer}>
               <button 
+              onClick={handleEdit}
                 onMouseEnter={() => handleMouseEnter(3)}
                 onMouseLeave={() => handleMouseLeave(3)}
                 style={headerBools[3] ? styles.buttonHover:  styles.button }
@@ -135,6 +146,7 @@ return(
                 Edit Recipe
                 </button>
               <button 
+                onClick={handleDelete}
                 onMouseEnter={() => handleMouseEnter(4)}
                 onMouseLeave={() => handleMouseLeave(4)}
                 style={headerBools[4] ? styles.buttonHover:  styles.button}
@@ -238,7 +250,7 @@ return(
     button: {
         backgroundColor: "#ffffff",
         color: "#000000",
-        border: "none",
+       // border: "none",
         border: "1px solid #000",
         borderRadius: "30px",
         padding: "0.8rem 3rem",
@@ -246,6 +258,7 @@ return(
         fontWeight: "bold",
         cursor: "pointer",
         boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+        fontFamily: "'Georgia', serif",
        
       },
     
@@ -264,6 +277,7 @@ return(
         fontWeight: "bold",
         cursor: "pointer",
         boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+        fontFamily: "'Georgia', serif",
       },
   };
 
