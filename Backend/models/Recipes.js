@@ -8,10 +8,10 @@ const recipeSchema = new mongoose.Schema({
   steps:[{
     type: String
   }],
-  // photo: {
-  //   data: { type: Buffer, required: true },          // Ensuring the photo data is required
-  //   contentType: { type: String, required: true },   // Ensuring the content type (MIME type) is required
-  // },
+  photo: {
+    data: { type: Buffer, },          // Ensuring the photo data is required
+    contentType: { type: String},   // Ensuring the content type (MIME type) is required
+  },
   user: { type: String, required: true },  // This will be filled in upon creation of listings by session username
   date: { type: Date, default: Date.now },
   tags: { type: [String], default: [] }, // Array of tags, default to empty array

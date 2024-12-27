@@ -5,13 +5,16 @@ const path = require('path');
 const bcrypt = require( 'bcrypt');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
+const multer = require("multer");
+const storage = multer.memoryStorage(); // Store the file in memory
+const upload = multer({ storage });
 
 const { User } = require('./models/Users'); 
 const { Recipe } = require('./models/Recipes'); 
 
 const app = express();
 
-app.use(express.static(path.join(__dirname, '../Frontend/public')));
+app.use(express.static(path.join(__dirname, '../Frontend/public'))); // any file within the Frontend directory will be handled here
 app.use(express.json()); // For parsing application/json
 app.use(express.urlencoded({ extended: true })); // Enables parsing of URL-encoded form data
 app.use(cors({
@@ -122,25 +125,58 @@ app.use(session({
   });
 
 
-  app.post('/addrecipe', async (req, res) => {
-    try {
-      const { title, description , username, steps } = req.body;
+  // app.post('/addrecipe', async (req, res) => {
+  //   try {
+  //     const { title, description , username, steps, photo } = req.body;
       
-      const user = await User.findOne({ username });
-      if (user) {
-        // return res.json({ error: "User already exists" });
-        const newRecipe = new Recipe({title, description , steps, user});
-        await newRecipe.save();
-        res.json({ message: "User created successfully" });
+  //     const user = await User.findOne({ username });
+  //     if (user) {
+  //       // return res.json({ error: "User already exists" });
+  //       const newRecipe = new Recipe({title, description , steps, user});
+  //       await newRecipe.save();
+  //       res.json({ message: "User created successfully" });
         
-      }
+  //     }
 
      
+  //   } catch (error) {
+  //     console.error('Error adding recipe:', error);
+  //     res.status(500).json({ error: 'An error occurred while adding the recipe' });
+  //   }
+  // });
+
+  app.post("/addrecipe", upload.single("photo"), async (req, res) => {
+    try {
+      const { title, description , username} = req.body;
+      const steps = req.body.steps ? [].concat(req.body.steps) : [];
+      const user = await User.findOne({ username });
+      if(user){
+      const recipe = new Recipe({
+        title,
+        description,
+        steps,
+        user,
+        photo: req.file
+          ? {
+              data: req.file.buffer,
+              contentType: req.file.mimetype,
+            }
+          : undefined,
+      });
+      await recipe.save();
+      res.json({ message: "Recipe created successfully" });
+    }
+
+      
     } catch (error) {
-      console.error('Error adding recipe:', error);
-      res.status(500).json({ error: 'An error occurred while adding the recipe' });
+      console.error(error);
+      res.status(500).send('Error creating recipe');
     }
   });
+
+
+
+
 
 
 
@@ -245,6 +281,7 @@ app.use(session({
             date: listing.date,
             _id: listing._id,
             id: index,
+            photo: listing.photo,
           };
         });
      
@@ -259,25 +296,32 @@ app.use(session({
   });
 
 
-  app.post('/getCertainRecipe', async (req, res) => {
+
+
+  app.post('/getSearchRecipes', async (req, res) => {
 
     try {
     
-      const { _id } = req.body;
-      const filter = { _id };
+      const { username, title } = req.body;
+      const user = await User.findOne({ username });
+    // Use a regex for partial and case-insensitive matching of the title
+    const filter = {
+      user,
+      title: { $regex: title, $options: 'i' } // 'i' for case-insensitive matching
+    };
         
         // Fetch listings matching the filter
         const listings = await Recipe.find(filter);
         //console.log(listings);
         
-        const transformedListings = listings.map((listing) => {
+        const transformedListings = listings.map((listing, index) => {
           return {
             title: listing.title,
             user: listing.user, // Include the user field in the response
             description: listing.description,
             date: listing.date,
             _id: listing._id,
-            steps: listing.steps,
+            id: index,
           };
         });
      
@@ -290,6 +334,87 @@ app.use(session({
     }
 
   });
+
+
+
+
+
+
+  // app.post('/getCertainRecipe', async (req, res) => {
+
+  //   try {
+    
+  //     const { _id } = req.body;
+  //     const filter = { _id };
+        
+  //       // Fetch listings matching the filter
+  //       const listings = await Recipe.find(filter);
+  //       //console.log(listings);
+        
+  //       const transformedListings = listings.map((listing) => {
+  //         return {
+  //           title: listing.title,
+  //           user: listing.user, // Include the user field in the response
+  //           description: listing.description,
+  //           date: listing.date,
+  //           _id: listing._id,
+  //           steps: listing.steps,
+  //         };
+  //       });
+     
+
+  //     res.json(transformedListings);
+   
+  //   } catch (error) {
+  //     console.error('Error fetching Recipes:', error);
+  //     res.status(500).send('Error fetching Recipes');
+  //   }
+
+  // });
+
+
+
+  app.post('/getCertainRecipe', async (req, res) => {
+    try {
+      const { _id } = req.body;
+      const filter = { _id };
+  
+      // Fetch listings matching the filter
+      const listings = await Recipe.find(filter);
+  
+      const transformedListings = listings.map((listing) => {
+        const transformedListing = {
+          title: listing.title,
+          user: listing.user, // Include the user field in the response
+          description: listing.description,
+          date: listing.date,
+          _id: listing._id,
+          steps: listing.steps,
+        };
+  
+        // Include photo if it exists
+        if (listing.photo && listing.photo.data) {
+          transformedListing.photo = {
+            data: listing.photo.data.toString('base64'), // Convert Buffer to Base64
+            contentType: listing.photo.contentType,
+          };
+        }
+  
+        return transformedListing;
+      });
+  
+      res.json(transformedListings);
+    } catch (error) {
+      console.error('Error fetching Recipes:', error);
+      res.status(500).send('Error fetching Recipes');
+    }
+  });
+  
+
+
+  
+
+  
 
 
   app.post('/getSteps', async (req, res) => {

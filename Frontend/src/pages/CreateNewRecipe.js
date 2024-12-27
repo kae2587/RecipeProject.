@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 
 function CreateNewRecipe() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [inputs, setInputs] = useState([{ id: 1, value: "" }]); // Initial input section
+  const [photo, setPhoto] = useState('');
+  const profilePhotoRef = useRef();
 
   const [isRecipeHovering, setIsRecipeHovering] = useState(false);
   const [isFeaturedHovering, setIsFeaturedHovering] = useState(false);
@@ -36,7 +38,23 @@ function CreateNewRecipe() {
     setIsMealHovering(false);
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
 
+      // Read the file as a binary string to convert to Buffer later
+      reader.onload = (event) => {
+        const buffer = new Uint8Array(event.target.result); // Convert to Buffer
+        setPhoto({
+          data: buffer, // Store the buffer in the state
+          contentType: file.type, // Store the MIME type
+        });
+      };
+
+      reader.readAsArrayBuffer(file); // Read the file as an ArrayBuffer
+    }
+  };
 
   const handleAddInput = () => {
     const newInput = { id: inputs.length + 1, value: "" };
@@ -60,54 +78,112 @@ function CreateNewRecipe() {
     setInputs(reassignedInputs);
   };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const response = await fetch('http://localhost:8001/returnusername', {
+  //       method: 'GET',
+  //       credentials: 'include', // Include session cookies
+  //     });
+
+  //     if (response.ok) {
+  //       const data = await response.json();
+  //       if (data.username) {
+  //         const steps = inputs.map(input => input.value);
+
+  //         const recipe = {
+  //           title,
+  //           description,
+  //           username: data.username,
+  //           steps,
+  //         };
+
+  //         const response = await fetch('http://localhost:8001/addrecipe', {
+  //           method: 'POST',
+  //           headers: { 'Content-Type': 'application/json' },
+  //           credentials: 'include',
+  //           body: JSON.stringify(recipe) // Converts the recipe object into a JSON string
+  //         });
+
+  //         if (response.ok) {
+
+  //         //  alert(({title}), " Recipe created successfully!");
+  //           alert(title + " Recipe created successfully!");
+
+  //           // Reset form state to clear the form
+  //           setTitle('');
+  //           setDescription('');
+  //            setInputs([{ id: 1, value: "" }]);
+
+
+  //         } else {
+  //           alert("Failed to create recipe.");
+  //         }
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching data:', error);
+  //     alert('An error occurred. Please try again.');
+  //   }
+  // };
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
+    // Prepare the form data
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('description', description);
+  
+    if (photo) {
+      formData.append('photo', new Blob([photo.data], { type: photo.contentType }), 'photo.jpg');
+    }
+  
+    inputs.forEach((input, index) => {
+      formData.append(`steps[${index}]`, input.value);
+    });
+  
     try {
-      const response = await fetch('http://localhost:8001/returnusername', {
+      // Fetch the username
+      const usernameResponse = await fetch('http://localhost:8001/returnusername', {
         method: 'GET',
         credentials: 'include', // Include session cookies
       });
-
-      if (response.ok) {
-        const data = await response.json();
-        if (data.username) {
-          const steps = inputs.map(input => input.value);
-
-          const recipe = {
-            title,
-            description,
-            username: data.username,
-            steps
-          };
-
-          const response = await fetch('http://localhost:8001/addrecipe', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify(recipe) // Converts the recipe object into a JSON string
-          });
-
-          if (response.ok) {
-
-          //  alert(({title}), " Recipe created successfully!");
-            alert(title + " Recipe created successfully!");
-
-            // Reset form state to clear the form
-            setTitle('');
-            setDescription('');
-             setInputs([{ id: 1, value: "" }]);
-
-
-          } else {
-            alert("Failed to create recipe.");
-          }
-        }
+  
+      if (!usernameResponse.ok) {
+        throw new Error('Failed to retrieve username');
       }
+  
+      const { username } = await usernameResponse.json();
+  
+      if (!username) {
+        throw new Error('Username not found in response');
+      }
+  
+      formData.append('username', username);
+  
+      // Submit the recipe
+      const recipeResponse = await fetch('http://localhost:8001/addrecipe', {
+        method: 'POST',
+        body: formData,
+      });
+  
+      if (!recipeResponse.ok) {
+        throw new Error('Failed to create recipe');
+      }
+  
+      alert('Recipe created successfully!');
     } catch (error) {
-      console.error('Error fetching data:', error);
-      alert('An error occurred. Please try again.');
+      console.error('Error submitting form:', error);
+      alert('Error: ' + error.message);
     }
   };
+  
+  
+
+
+
 
   return (
     <>
@@ -167,6 +243,20 @@ style={isMealHovering ? styles.linkHover : styles.link}>
         style={styles.input}
         onChange={(e) => setDescription(e.target.value)}
       />
+
+
+<label htmlFor="photo" style={styles.label}>Photo (Optional):</label>
+<input
+        type="file"
+        name="photo"
+        accept="image/*"
+        //required
+        ref={profilePhotoRef}
+        onChange={handleFileChange}
+      />
+
+
+
 
       {inputs.map(input => (
         <div key={input.id}>

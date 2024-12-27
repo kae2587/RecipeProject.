@@ -81,7 +81,12 @@ const getSteps = async (title) => {
     
             setTitle(data2[0].title);
             setDescription(data2[0].description);
+          }
 
+
+          else {
+
+            alert (" An Error has Occured. Try Again")
           }
     
       };

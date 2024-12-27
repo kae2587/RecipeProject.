@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 function YourRecipePage() {
   const [userRecipes, setUserRecipes] = useState([]);
+  const [search, setSearch] = useState("");
   
   const [isRecipeHovering, setIsRecipeHovering] = useState(false);
   const [isFeaturedHovering, setIsFeaturedHovering] = useState(false);
@@ -11,6 +12,81 @@ function YourRecipePage() {
   const [hoverStates, setHoverStates] = useState([]);
   
 
+
+  useEffect(() => {
+
+    const handleSearch = async () => {
+      try {
+        const response = await fetch('http://localhost:8001/returnusername', {
+          method: 'GET',
+          credentials: 'include', // Include session cookies
+        });
+  
+        if (response.ok) {
+          const data = await response.json();
+          if (data.username) {
+            
+
+            const user = {
+              username: data.username,
+              title: search,
+            };
+
+
+            if (search === ""){
+
+             
+            const user = {
+              username: data.username,
+            };
+
+
+
+            const responsetwo = await fetch(' http://localhost:8001/getRecipes', {
+              method: 'POST', 
+              headers: { 'Content-Type': 'application/json' }, 
+              credentials: 'include', 
+              body: JSON.stringify(user) 
+            })
+
+            if (responsetwo.ok) {
+
+              const data2 = await responsetwo.json();
+              setUserRecipes(data2);
+
+            
+            }
+              
+            }
+
+            else {
+            const responsetwo = await fetch(' http://localhost:8001/getSearchRecipes', {
+              method: 'POST', 
+              headers: { 'Content-Type': 'application/json' }, 
+              credentials: 'include', 
+              body: JSON.stringify(user) 
+            })
+
+            if (responsetwo.ok) {
+
+              const data2 = await responsetwo.json();
+              setUserRecipes(data2);
+
+            
+            }
+          }
+
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        alert('An error occurred. Please try again.');
+      }
+
+    };
+  
+    handleSearch();
+  }, [search]); 
 
 
   const handleMouseEnter = (id) => {
@@ -67,6 +143,8 @@ function YourRecipePage() {
               username: data.username,
             };
 
+
+
             const responsetwo = await fetch(' http://localhost:8001/getRecipes', {
               method: 'POST', 
               headers: { 'Content-Type': 'application/json' }, 
@@ -81,6 +159,8 @@ function YourRecipePage() {
 
             
             }
+
+          
 
           }
         }
@@ -122,6 +202,20 @@ style={isMealHovering ? styles.linkHover : styles.link}>
 </header>
 </div>
 <h style={styles.header}>My Recipes</h>
+
+<form style={styles.searchForm}>
+<label htmlFor="search" style={styles.searchLabel}> Search for a recipe</label>
+      <input
+        type="text"
+        id="search"
+        value={search}
+        placeholder="Enter the recipe title"
+        style={styles.searchInput}
+        onChange={(e) => setSearch(e.target.value)}
+      />
+</form>
+
+
 <div style={styles.fullform}>
 {userRecipes.length === 0 ? (
       <p>No recipes found.</p>
@@ -336,9 +430,38 @@ const styles = {
         fontWeight: "bold",
         fontFamily: "'Georgia', serif",
         textDecoration: "none",
-      }
-      
+      },
 
+
+      searchForm:{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+      },
+
+
+      searchLabel:{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        fontFamily: "'Georgia', serif",
+        textAlign: "center",
+        padding: "1.5rem",
+        fontSize: "1.5rem",
+      },
+      searchInput:{
+         display: "flex",
+         flexDirection: "column",
+        width: "45%",
+        fontSize: "1.2rem",
+        borderRadius: "15px",
+        border: "1px solid #000",
+        marginBottom: "1rem",
+        boxSizing: "border-box",
+        padding: ".5rem",
+        
+      },
 
 };
 

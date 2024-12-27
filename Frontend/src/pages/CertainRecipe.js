@@ -5,7 +5,7 @@ function CertainRecipe() {
 
 const [userRecipe, setUserRecipe] = useState([]);
 const [id, setId] = useState(0);
-
+//const [imageData, setImageData] = useState(null);
 
 
 const [headerBools, setHeaderBools] = useState([false, false, false])
@@ -135,8 +135,18 @@ return(
               <b>Date Posted:</b> {listing.date.slice(0, 10)}
             </p>
 
+            {listing.photo && listing.photo.data ? (
+                    <img 
+                        src={`data:${listing.photo.contentType};base64,${listing.photo.data}`} 
+                        alt={listing.title} 
+                        style={styles.image}
+                    />
+                    ) : (
+                    <p>No Image</p>
+                    )}
+
+
             {listing.steps && listing.steps.length > 0 && (
-            
               <div style={styles.stepsContainer}>
                 <h3 style={styles.stepsTitle}>
                   <b>Steps:</b>
@@ -159,6 +169,7 @@ return(
             {listing.steps && listing.steps.length === 0 && (
               <p style={styles.noSteps}>No Steps Provided</p>
             )}
+
             <div style={styles.buttonContainer}>
               <button 
               onClick={handleEdit}
@@ -168,6 +179,7 @@ return(
             >
                 Edit Recipe
                 </button>
+
               <button 
                 onClick={handleDelete}
                 onMouseEnter={() => handleMouseEnter(4)}
