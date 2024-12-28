@@ -125,26 +125,6 @@ app.use(session({
   });
 
 
-  // app.post('/addrecipe', async (req, res) => {
-  //   try {
-  //     const { title, description , username, steps, photo } = req.body;
-      
-  //     const user = await User.findOne({ username });
-  //     if (user) {
-  //       // return res.json({ error: "User already exists" });
-  //       const newRecipe = new Recipe({title, description , steps, user});
-  //       await newRecipe.save();
-  //       res.json({ message: "User created successfully" });
-        
-  //     }
-
-     
-  //   } catch (error) {
-  //     console.error('Error adding recipe:', error);
-  //     res.status(500).json({ error: 'An error occurred while adding the recipe' });
-  //   }
-  // });
-
   app.post("/addrecipe", upload.single("photo"), async (req, res) => {
     try {
       const { title, description , username} = req.body;
@@ -176,6 +156,60 @@ app.use(session({
 
 
 
+  // app.post("/editrecipe", async (req, res) => {
+  //   upload.single("photo")(req, res, async (err) => {
+  //     if (err instanceof multer.MulterError) {
+  //       // Handle Multer-specific errors
+  //       console.error("Multer error:", err);
+  //       return res.status(400).send("File upload error");
+  //     } else if (err) {
+  //       // Handle generic errors
+  //       console.error("Unknown error:", err);
+  //       return res.status(500).send("Error processing uploaded file");
+  //     }
+  
+  //     try {
+  //       const { title, description, username, _id } = req.body;
+  
+  //       // Ensure steps are properly handled
+  //       const steps = Array.isArray(req.body.steps) ? req.body.steps : [req.body.steps];
+  
+  //       const user = await User.findOne({ username });
+  
+  //       if (user) {
+  //         const updateFields = {
+  //           title,
+  //           description,
+  //           steps,
+  //         };
+  
+  //         // Safely check for file upload
+  //         if (req.file) {
+  //           updateFields.photo = {
+  //             data: req.file.buffer,
+  //             contentType: req.file.mimetype,
+  //           };
+  //         }
+  
+  //         const updateResult = await Recipe.updateOne({ _id }, { $set: updateFields });
+  
+  //         if (updateResult.modifiedCount > 0) {
+  //           return res.json({ message: "Recipe updated successfully" });
+  //         } else {
+  //           return res.status(404).send("Recipe not found or no changes made");
+  //         }
+  //       } else {
+  //         return res.status(404).send("User not found");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error updating recipe:", error);
+  //       return res.status(500).send("Error updating recipe");
+  //     }
+  //   });
+  // });
+  
+  
+  
 
 
 
@@ -183,7 +217,6 @@ app.use(session({
   app.post('/editrecipe', async (req, res) => {
     try {
       const { title, description, username, steps, _id } = req.body;
-  console.log(_id);
 
       const user = await User.findOne({ username });
   

@@ -31,10 +31,6 @@ const user = {
 
   }
 
-
-
-
-
 };
 
 const handleEdit = () =>{
@@ -136,13 +132,17 @@ return(
             </p>
 
             {listing.photo && listing.photo.data ? (
+                <div style={styles.imagediv}>
                     <img 
                         src={`data:${listing.photo.contentType};base64,${listing.photo.data}`} 
                         alt={listing.title} 
                         style={styles.image}
                     />
+                    </div>
                     ) : (
+                    <div style={styles.imagediv}>
                     <p>No Image</p>
+                    </div>
                     )}
 
 
@@ -254,7 +254,7 @@ return(
       fontFamily: "'Georgia', serif",
     },
     stepsContainer: {
-      marginBottom: "1.5rem",
+      marginBottom: "3.5rem",
       padding: "0rem 20rem",
     },
     stepsTitle: {
@@ -296,8 +296,21 @@ return(
         fontFamily: "'Georgia', serif",
        
       },
+      imagediv:{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center", // Ensure vertical centering if needed
+        overflow: "hidden", // Prevent overflow issues
+        
+      },
     
-
+    image:{
+        width: "400px",
+        height: "300px",
+        objectFit: "contain",
+        marginBottom: "1rem",
+        borderRadius: "35%",
+    },
     
       buttonHover:{
         backgroundColor: "#000000",

@@ -7,6 +7,8 @@ function EditRecipe() {
   //const [inputs, setInputs] = useState([{ id: 1, value: "" }]); // Initial input section
   const [inputs, setInputs] = useState([]);
   const [id, setId] = useState(null);
+  const [userRecipe, setUserRecipe] = useState([]);
+  const[steps, setSteps] = useState([])
   const [headerBools, setHeaderBools] = useState([false, false, false])
 
   const handleMouseEnter = (id) => {
@@ -47,6 +49,7 @@ const getSteps = async (title) => {
       if (responsetwo.ok) {
         const data2 = await responsetwo.json();
         const fetchedSteps = data2[0].steps;
+        setSteps(fetchedSteps);
         setInputs(fetchedSteps.map((step, index) => ({ id: index + 1, value: step })));
       }
 
@@ -78,22 +81,17 @@ const getSteps = async (title) => {
     
           if (responsetwo.ok) {
             const data2 = await responsetwo.json();
-    
+            setUserRecipe(data2);
             setTitle(data2[0].title);
             setDescription(data2[0].description);
-          }
 
-
-          else {
-
-            alert (" An Error has Occured. Try Again")
           }
     
       };
     
       useEffect(() => {
         getRecipe();
-       },  );
+       }, [] );
 
 
 
@@ -119,21 +117,7 @@ const getSteps = async (title) => {
       };
 
 
-      const handleAddInputFirst = () => {
-        setInputs(prevInputs => {
-            // Create a new input with ID of 1
-            const newInput = { id: 1, value: "" };
-    
-            // Update the rest of the inputs to have incremented IDs
-            const updatedInputs = prevInputs.map(input => ({
-                ...input,
-                id: input.id + 1
-            }));
-    
-            // Add the new input at the start of the array
-            return [newInput, ...updatedInputs];
-        });
-    };
+    const handleAddInputFirst 
       
 
   const handleInputChange = (id, newValue) => {

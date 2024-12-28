@@ -78,54 +78,6 @@ function CreateNewRecipe() {
     setInputs(reassignedInputs);
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const response = await fetch('http://localhost:8001/returnusername', {
-  //       method: 'GET',
-  //       credentials: 'include', // Include session cookies
-  //     });
-
-  //     if (response.ok) {
-  //       const data = await response.json();
-  //       if (data.username) {
-  //         const steps = inputs.map(input => input.value);
-
-  //         const recipe = {
-  //           title,
-  //           description,
-  //           username: data.username,
-  //           steps,
-  //         };
-
-  //         const response = await fetch('http://localhost:8001/addrecipe', {
-  //           method: 'POST',
-  //           headers: { 'Content-Type': 'application/json' },
-  //           credentials: 'include',
-  //           body: JSON.stringify(recipe) // Converts the recipe object into a JSON string
-  //         });
-
-  //         if (response.ok) {
-
-  //         //  alert(({title}), " Recipe created successfully!");
-  //           alert(title + " Recipe created successfully!");
-
-  //           // Reset form state to clear the form
-  //           setTitle('');
-  //           setDescription('');
-  //            setInputs([{ id: 1, value: "" }]);
-
-
-  //         } else {
-  //           alert("Failed to create recipe.");
-  //         }
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error('Error fetching data:', error);
-  //     alert('An error occurred. Please try again.');
-  //   }
-  // };
 
 
   const handleSubmit = async (e) => {
