@@ -124,7 +124,12 @@ function CreateNewRecipe() {
       if (!recipeResponse.ok) {
         throw new Error('Failed to create recipe');
       }
-  
+      setTitle("");
+      setDescription("");
+      setInputs([{id: 1, value: " "}]);
+      setPhoto("");
+      profilePhotoRef.current = null;
+       window.location.href=  `/createnewrecipe`
       alert('Recipe created successfully!');
     } catch (error) {
       console.error('Error submitting form:', error);

@@ -184,12 +184,12 @@ app.use(session({
   //         };
   
   //         // Safely check for file upload
-  //         if (req.file) {
-  //           updateFields.photo = {
-  //             data: req.file.buffer,
-  //             contentType: req.file.mimetype,
-  //           };
-  //         }
+          // if (req.file) {
+          //   updateFields.photo = {
+          //     data: req.file.buffer,
+          //     contentType: req.file.mimetype,
+          //   };
+          // }
   
   //         const updateResult = await Recipe.updateOne({ _id }, { $set: updateFields });
   
@@ -209,12 +209,7 @@ app.use(session({
   // });
   
   
-  
-
-
-
-
-  app.post('/editrecipe', async (req, res) => {
+  app.post("/editrecipe", upload.single("photo"), async (req, res) => {
     try {
       const { title, description, username, steps, _id } = req.body;
 
@@ -228,6 +223,14 @@ app.use(session({
               title: title,
               description: description,
               steps: steps,
+              photo: req.file
+              ? {
+                  data: req.file.buffer,
+                  contentType: req.file.mimetype,
+                }
+              : undefined,
+
+
             } 
           }
         );
@@ -241,6 +244,37 @@ app.use(session({
       res.status(500).send("Error updating recipe");
     }
   });
+
+
+
+
+  // app.post('/editrecipe', async (req, res) => {
+  //   try {
+  //     const { title, description, username, steps, _id } = req.body;
+
+  //     const user = await User.findOne({ username });
+  
+  //     if (user) {
+  //       const updateResult = await Recipe.updateOne(
+  //         { _id },
+  //         { 
+  //           $set: { 
+  //             title: title,
+  //             description: description,
+  //             steps: steps,
+  //           } 
+  //         }
+  //       );
+  
+  //       res.status(200).send("Recipe updated successfully");
+  //     } else {
+  //       res.status(404).send("User not found");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error updating recipe:", error);
+  //     res.status(500).send("Error updating recipe");
+  //   }
+  // });
   
 
 
