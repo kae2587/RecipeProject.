@@ -193,7 +193,7 @@ onMouseLeave={handleMouseLeaveFeatured}
 style={isFeaturedHovering ? styles.linkHover : styles.link}> 
 Featured Recipes </a>
 
-<a href = "/signin" 
+<a href = "/mealgenerator" 
 onMouseEnter={handleMouseEnterMeal}
 onMouseLeave={handleMouseLeaveMeal}
 style={isMealHovering ? styles.linkHover : styles.link}>

@@ -114,7 +114,7 @@ return(
           Featured Recipes
         </a>
         <a
-          href="/signin"
+          href="/mealgenerator"
           onMouseEnter={() => handleMouseEnter(2)}
           onMouseLeave={() => handleMouseLeave(2)}
           style={headerBools[2] ? styles.linkHover : styles.link}
@@ -309,7 +309,9 @@ return(
         height: "300px",
         objectFit: "contain",
         marginBottom: "1rem",
-        borderRadius: "35%",
+        border: "1px solid #ddd",
+        padding: "5px",
+        borderRadius: "25%",
     },
     
       buttonHover:{

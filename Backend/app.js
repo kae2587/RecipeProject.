@@ -213,8 +213,9 @@ app.use(session({
     try {
       const { title, description, username, steps, _id } = req.body;
 
+
       const user = await User.findOne({ username });
-  
+
       if (user) {
         const updateResult = await Recipe.updateOne(
           { _id },
@@ -333,6 +334,7 @@ app.use(session({
     try {
     
       const { username } = req.body;
+      
       const user = await User.findOne({ username });
       const filter = { user };
         

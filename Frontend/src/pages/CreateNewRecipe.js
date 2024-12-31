@@ -6,10 +6,23 @@ function CreateNewRecipe() {
   const [inputs, setInputs] = useState([{ id: 1, value: "" }]); // Initial input section
   const [photo, setPhoto] = useState('');
   const profilePhotoRef = useRef();
-
   const [isRecipeHovering, setIsRecipeHovering] = useState(false);
   const [isFeaturedHovering, setIsFeaturedHovering] = useState(false);
   const [isMealHovering, setIsMealHovering] = useState(false);
+  //const [isOn, setIsOn] = useState(false);
+  const [isOn, setIsOn] = useState([false, false, false]);
+
+    // const toggleSwitch = () => {
+    //   setIsOn((prevState) => !prevState);
+    // };
+
+    const toggleSwitch = (id) => {
+      setIsOn((prevStates) => {
+        const updatedStates = [...prevStates];
+        updatedStates[id] = !updatedStates[id]; // Correctly toggling the state at index `id`
+        return updatedStates;
+      });
+    };
 
   const handleMouseEnterRecipe = () => {
     setIsRecipeHovering(true);
@@ -166,7 +179,7 @@ onMouseLeave={handleMouseLeaveFeatured}
 style={isFeaturedHovering ? styles.linkHover : styles.link}> 
 Featured Recipes </a>
 
-<a href = "/signin" 
+<a href = "/mealgenerator" 
 onMouseEnter={handleMouseEnterMeal}
 onMouseLeave={handleMouseLeaveMeal}
 style={isMealHovering ? styles.linkHover : styles.link}>
@@ -201,16 +214,57 @@ style={isMealHovering ? styles.linkHover : styles.link}>
         onChange={(e) => setDescription(e.target.value)}
       />
 
-
+<div style={styles.photoInput}>
 <label htmlFor="photo" style={styles.label}>Photo (Optional):</label>
 <input
         type="file"
         name="photo"
         accept="image/*"
         //required
+        
         ref={profilePhotoRef}
         onChange={handleFileChange}
       />
+</div>
+
+<div style={styles.switchContainer}>
+  <h style={styles.Switchlabel}>Breakfast</h>
+  <div
+    style={isOn[0] ? styles.switch : styles.IsOnswitch}
+    onClick={() => toggleSwitch(0)}
+  >
+    <div
+      style={isOn[0] ? styles.switchCircle : styles.IsOnswitchCircle}
+    ></div>
+  </div>
+</div>
+
+<div style={styles.switchContainer}>
+  <h style={styles.Switchlabel}>Lunch</h>
+  <div
+    style={isOn[1] ? styles.switch : styles.IsOnswitch}
+    onClick={() => toggleSwitch(1)}
+  >
+    <div
+      style={isOn[1] ? styles.switchCircle : styles.IsOnswitchCircle}
+    ></div>
+  </div>
+</div>
+
+<div style={styles.switchContainer}>
+  <h style={styles.Switchlabel}>Dinner</h>
+  <div
+    style={isOn[2] ? styles.switch : styles.IsOnswitch}
+    onClick={() => toggleSwitch(2)}
+  >
+    <div
+      style={isOn[2] ? styles.switchCircle : styles.IsOnswitchCircle}
+    ></div>
+  </div>
+</div>
+
+
+
 
 
 
@@ -301,6 +355,23 @@ const styles = {
         fontFamily: "'Georgia', serif",
       },
 
+      photoInput:{
+        marginBottom:"3rem",
+      },
+
+      // switchContainer: {
+      //   // display: "flex",
+      //   // alignItems: "left",
+      //   // justifyContent: "left",
+      //   // marginTop: "1rem",
+      
+      //   display: 'flex',
+      //   flexDirection: 'row', // Align items vertically
+      //   alignItems: 'flex-start', // Align switches to the left
+      //   gap: '5px', // Add spacing between items
+      //   padding: '5px', // Optional padding around the container
+      // },
+  
       label: {
         fontSize: "1.5rem",
         fontFamily: "'Georgia', serif",
@@ -308,7 +379,28 @@ const styles = {
         marginBottom: "1.25rem",
         textAlign: "left",
         width: "100%",
+        
       },
+
+      switchContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center', // Vertically centers label and switch
+        gap: '5px', // Adds spacing between label and switch
+        padding: '5px', // Optional vertical spacing
+        width: '100%', // Ensures the container spans full width
+        marginBottom: "10px",
+    },
+    
+    Switchlabel: {
+        fontSize: "1.5rem",
+        fontFamily: "'Georgia', serif",
+        color: "#000000",
+        marginBottom: "0", // Remove bottom margin
+        textAlign: "left", // Align text to the left
+        width: "150px", // Set a fixed width for consistent alignment
+    },
+    
 
 
       input: {
@@ -317,7 +409,7 @@ const styles = {
         fontSize: "1.2rem",
         borderRadius: "15px",
         border: "1px solid #000",
-        marginBottom: "1rem",
+        marginBottom: "2rem",
         boxSizing: "border-box",
       },
 
@@ -401,7 +493,50 @@ const styles = {
         fontWeight: "bold",
         fontFamily: "'Georgia', serif",
         textDecoration: "none",
-      }
+      },
+
+
+      switch: {
+        width: "80px",
+        height: "35px",
+        backgroundColor: "green" ,
+        borderRadius: "15px",
+        display: "flex",
+        alignItems: "center",
+        padding: "5px",
+        cursor: "pointer",
+        transition: "background-color 0.3s ease-in-out",
+      },
+  
+      IsOnswitch: {
+        width: "80px",
+        height: "35px",
+        backgroundColor: "red",
+        borderRadius: "15px",
+        display: "flex",
+        alignItems: "center",
+        padding: "5px",
+        cursor: "pointer",
+        transition: "background-color 0.3s ease-in-out",
+      },
+
+      switchCircle: {
+        width: "20px",
+        height: "20px",
+        backgroundColor: "#ffffff",
+        borderRadius: "50%",
+        transition: "transform 0.3s ease-in-out",
+        transform: "translateX(0)",
+      },
+
+      IsOnswitchCircle: {
+        width: "20px",
+        height: "20px",
+        backgroundColor: "#ffffff",
+        borderRadius: "50%",
+        transition: "transform 0.3s ease-in-out",
+        transform:"translateX(55px)" ,
+      },
       
 
 

@@ -8,6 +8,9 @@ import YourRecipe from './pages/YourRecipePage';
 import CreateNewRecipe from './pages/CreateNewRecipe';
 import CertainRecipe from './pages/CertainRecipe';
 import EditRecipe from './pages/EditRecipe';
+import MealGenerator from './pages/MealGenerator';
+import GenerateSevenDay from './pages/GenerateSevenDay';
+
 
 // import './App.css'; // Uncomment this if you have custom styles
 
@@ -22,6 +25,8 @@ function App() {
         <Route path="/createnewrecipe" element={<CreateNewRecipe />} />
         <Route path="/certainrecipe" element={<CertainRecipe />} />
         <Route path="/editrecipe" element={<EditRecipe />} />
+        <Route path="/mealgenerator" element={<MealGenerator />} />
+        <Route path="/generatesevenday" element={<GenerateSevenDay />} />
       </Routes>
     </Router>
   );
