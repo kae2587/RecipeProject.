@@ -12,10 +12,6 @@ function CreateNewRecipe() {
   //const [isOn, setIsOn] = useState(false);
   const [isOn, setIsOn] = useState([false, false, false]);
 
-    // const toggleSwitch = () => {
-    //   setIsOn((prevState) => !prevState);
-    // };
-
     const toggleSwitch = (id) => {
       setIsOn((prevStates) => {
         const updatedStates = [...prevStates];
@@ -127,6 +123,9 @@ function CreateNewRecipe() {
       }
   
       formData.append('username', username);
+      formData.append('breakfast', isOn[0]);
+      formData.append('lunch', isOn[1]);
+      formData.append('dinner', isOn[2]);
   
       // Submit the recipe
       const recipeResponse = await fetch('http://localhost:8001/addrecipe', {
@@ -389,7 +388,7 @@ const styles = {
         gap: '5px', // Adds spacing between label and switch
         padding: '5px', // Optional vertical spacing
         width: '100%', // Ensures the container spans full width
-        marginBottom: "10px",
+        marginBottom: "15px",
     },
     
     Switchlabel: {

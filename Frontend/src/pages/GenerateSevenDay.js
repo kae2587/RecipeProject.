@@ -6,6 +6,15 @@ const [headerBools, setHeaderBools] = useState([false, false, false]);
 const [userRecipes, setUserRecipes] = useState([]);
 const [isOn, setIsOn] = useState(false);
 const [randArr, setrandArr] = useState([]);
+const [breakfastrandArr, setBreakfastrandArr] = useState([]);
+const [LunchrandArr, setLunchrandArr] = useState([]);
+const [dinnerrandArr, setDinnerrandArr] = useState([]);
+
+const [breakfastRecipe, setBreakfastRecipe] = useState([]);
+const [lunchRecipe, setLunchRecipe] = useState([]);
+const [dinnerRecipe, setDinnerRecipes] = useState([]);
+
+
 
     const toggleSwitch = () => {
       setIsOn((prevState) => !prevState);
@@ -33,22 +42,61 @@ const [randArr, setrandArr] = useState([]);
 
 
 
-            const responsetwo = await fetch(' http://localhost:8001/getRecipes', {
-              method: 'POST', 
-              headers: { 'Content-Type': 'application/json' }, 
-              credentials: 'include', 
-              body: JSON.stringify(user) 
-            })
+            // const responsetwo = await fetch(' http://localhost:8001/getBreakfastRecipes', {
+            //     method: 'POST', 
+            //     headers: { 'Content-Type': 'application/json' }, 
+            //     credentials: 'include', 
+            //     body: JSON.stringify(user) 
+            //   })
 
-            if (responsetwo.ok) {
+            // if (responsetwo.ok) {
 
-              const data2 = await responsetwo.json();
-              setUserRecipes(data2);
-              setRandArr(data2.length);
+            //   const data2 = await responsetwo.json();
+            //   setUserRecipes(data2);
+            //   setRandArr(data2.length);
+            
+            // }
+
+            const breakfastresponse = await fetch(' http://localhost:8001/getBreakfastRecipes', {
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' }, 
+                credentials: 'include', 
+                body: JSON.stringify(user) 
+              })
+
+            if (breakfastresponse.ok) {
+
+              const breakfast = await breakfastresponse.json();
+              setBreakfastRecipe(breakfast);
+              setBreakfastrandArr(breakfast.length);
+
+              const lunchReponse = await fetch(' http://localhost:8001/getLunchRecipes', {
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' }, 
+                credentials: 'include', 
+                body: JSON.stringify(user) 
+              })
+
+              if(lunchReponse.ok){
+                const lunch = await lunchReponse.json();
+                setLunchRecipe(lunch);
+                setLunchrandArr(lunch.length);
+
+                const dinnerReponse = await fetch(' http://localhost:8001/getDinnerRecipes', {
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    credentials: 'include', 
+                    body: JSON.stringify(user) 
+                  })
+                  if(dinnerReponse.ok){
+                    const dinner = await dinnerReponse.json();
+                    setDinnerRecipes(dinner);
+                    setDinnerrandArr(dinner.length);
+                  }
+
+              }
             
             }
-
-          
 
           }
         }

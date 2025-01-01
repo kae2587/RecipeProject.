@@ -10,7 +10,15 @@ function EditRecipe() {
   const [headerBools, setHeaderBools] = useState([false, false, false])
   const [photo, setPhoto] = useState('');
   const profilePhotoRef = useRef();
+  const [isOn, setIsOn] = useState([false, false, false]);
 
+    const toggleSwitch = (id) => {
+      setIsOn((prevStates) => {
+        const updatedStates = [...prevStates];
+        updatedStates[id] = !updatedStates[id]; // Correctly toggling the state at index `id`
+        return updatedStates;
+      });
+    };
 
   const handleMouseEnter = (id) => {
       setHeaderBools((prevStates) => {
@@ -101,7 +109,7 @@ const handleFileChange = (e) => {
             const data2 = await responsetwo.json();
             setTitle(data2[0].title);
             setDescription(data2[0].description);
-
+            setIsOn([data2[0].breakfast, data2[0].lunch, data2[0].dinner]);
           }
     
       };
@@ -191,6 +199,9 @@ const handleFileChange = (e) => {
         formData.append('_id', id);
         formData.append('username', data.username);
         formData.append('description', description);
+        formData.append('breakfast', isOn[0]);
+        formData.append('lunch', isOn[1]);
+        formData.append('dinner', isOn[2]);
 
         if (photo) {
             formData.append('photo', new Blob([photo.data], { type: photo.contentType }), 'photo.jpg');
@@ -288,6 +299,47 @@ style={headerBools[2] ? styles.linkHover : styles.link}>
         onChange={handleFileChange}
         style = {styles.photoInput}
       />
+
+
+<div style={styles.switchContainer}>
+  <h style={styles.Switchlabel}>Breakfast</h>
+  <div
+    style={isOn[0] ? styles.switch : styles.IsOnswitch}
+    onClick={() => toggleSwitch(0)}
+  >
+    <div
+      style={isOn[0] ? styles.switchCircle : styles.IsOnswitchCircle}
+    ></div>
+  </div>
+</div>
+
+<div style={styles.switchContainer}>
+  <h style={styles.Switchlabel}>Lunch</h>
+  <div
+    style={isOn[1] ? styles.switch : styles.IsOnswitch}
+    onClick={() => toggleSwitch(1)}
+  >
+    <div
+      style={isOn[1] ? styles.switchCircle : styles.IsOnswitchCircle}
+    ></div>
+  </div>
+</div>
+
+<div style={styles.switchContainer}>
+  <h style={styles.Switchlabel}>Dinner</h>
+  <div
+    style={isOn[2] ? styles.switch : styles.IsOnswitch}
+    onClick={() => toggleSwitch(2)}
+  >
+    <div
+      style={isOn[2] ? styles.switchCircle : styles.IsOnswitchCircle}
+    ></div>
+  </div>
+</div>
+
+
+
+
 
 
 
@@ -494,6 +546,67 @@ const styles = {
       },
 
       
+      switchContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center', // Vertically centers label and switch
+        gap: '5px', // Adds spacing between label and switch
+        padding: '5px', // Optional vertical spacing
+        width: '100%', // Ensures the container spans full width
+        marginBottom: "15px",
+    },
+    
+    Switchlabel: {
+        fontSize: "1.5rem",
+        fontFamily: "'Georgia', serif",
+        color: "#000000",
+        marginBottom: "0", // Remove bottom margin
+        textAlign: "left", // Align text to the left
+        width: "150px", // Set a fixed width for consistent alignment
+    },
+
+    switch: {
+        width: "80px",
+        height: "35px",
+        backgroundColor: "green" ,
+        borderRadius: "15px",
+        display: "flex",
+        alignItems: "center",
+        padding: "5px",
+        cursor: "pointer",
+        transition: "background-color 0.3s ease-in-out",
+      },
+  
+      IsOnswitch: {
+        width: "80px",
+        height: "35px",
+        backgroundColor: "red",
+        borderRadius: "15px",
+        display: "flex",
+        alignItems: "center",
+        padding: "5px",
+        cursor: "pointer",
+        transition: "background-color 0.3s ease-in-out",
+      },
+
+      switchCircle: {
+        width: "20px",
+        height: "20px",
+        backgroundColor: "#ffffff",
+        borderRadius: "50%",
+        transition: "transform 0.3s ease-in-out",
+        transform: "translateX(0)",
+      },
+
+      IsOnswitchCircle: {
+        width: "20px",
+        height: "20px",
+        backgroundColor: "#ffffff",
+        borderRadius: "50%",
+        transition: "transform 0.3s ease-in-out",
+        transform:"translateX(55px)" ,
+      },
+
 
 
 };

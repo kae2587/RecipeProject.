@@ -127,7 +127,7 @@ app.use(session({
 
   app.post("/addrecipe", upload.single("photo"), async (req, res) => {
     try {
-      const { title, description , username} = req.body;
+      const { title, description , username, breakfast, lunch, dinner} = req.body;
       const steps = req.body.steps ? [].concat(req.body.steps) : [];
       const user = await User.findOne({ username });
       if(user){
@@ -142,6 +142,9 @@ app.use(session({
               contentType: req.file.mimetype,
             }
           : undefined,
+          breakfast,
+          lunch,
+          dinner,
       });
       await recipe.save();
       res.json({ message: "Recipe created successfully" });
@@ -154,64 +157,10 @@ app.use(session({
     }
   });
 
-
-
-  // app.post("/editrecipe", async (req, res) => {
-  //   upload.single("photo")(req, res, async (err) => {
-  //     if (err instanceof multer.MulterError) {
-  //       // Handle Multer-specific errors
-  //       console.error("Multer error:", err);
-  //       return res.status(400).send("File upload error");
-  //     } else if (err) {
-  //       // Handle generic errors
-  //       console.error("Unknown error:", err);
-  //       return res.status(500).send("Error processing uploaded file");
-  //     }
-  
-  //     try {
-  //       const { title, description, username, _id } = req.body;
-  
-  //       // Ensure steps are properly handled
-  //       const steps = Array.isArray(req.body.steps) ? req.body.steps : [req.body.steps];
-  
-  //       const user = await User.findOne({ username });
-  
-  //       if (user) {
-  //         const updateFields = {
-  //           title,
-  //           description,
-  //           steps,
-  //         };
-  
-  //         // Safely check for file upload
-          // if (req.file) {
-          //   updateFields.photo = {
-          //     data: req.file.buffer,
-          //     contentType: req.file.mimetype,
-          //   };
-          // }
-  
-  //         const updateResult = await Recipe.updateOne({ _id }, { $set: updateFields });
-  
-  //         if (updateResult.modifiedCount > 0) {
-  //           return res.json({ message: "Recipe updated successfully" });
-  //         } else {
-  //           return res.status(404).send("Recipe not found or no changes made");
-  //         }
-  //       } else {
-  //         return res.status(404).send("User not found");
-  //       }
-  //     } catch (error) {
-  //       console.error("Error updating recipe:", error);
-  //       return res.status(500).send("Error updating recipe");
-  //     }
-  //   });
-  // });
-  
   
   app.post("/editrecipe", upload.single("photo"), async (req, res) => {
     try {
-      const { title, description, username, steps, _id } = req.body;
+      const { title, description, username, steps, _id , breakfast, lunch, dinner} = req.body;
 
 
       const user = await User.findOne({ username });
@@ -230,7 +179,9 @@ app.use(session({
                   contentType: req.file.mimetype,
                 }
               : undefined,
-
+              breakfast,
+              lunch,
+              dinner,
 
             } 
           }
@@ -366,6 +317,114 @@ app.use(session({
 
 
 
+  app.post('/getBreakfastRecipes', async (req, res) => {
+
+    try {
+    
+      const { username } = req.body;
+      
+      const user = await User.findOne({ username });
+     // const filter = { user };
+     const filter = { user , breakfast: true };  
+        // Fetch listings matching the filter
+        const listings = await Recipe.find(filter);
+    
+        
+        const transformedListings = listings.map((listing, index) => {
+          return {
+            title: listing.title,
+            user: listing.user, // Include the user field in the response
+            description: listing.description,
+            date: listing.date,
+            _id: listing._id,
+            id: index,
+            photo: listing.photo,
+          };
+        });
+     
+
+      res.json(transformedListings);
+   
+    } catch (error) {
+      console.error('Error fetching Recipes:', error);
+      res.status(500).send('Error fetching Recipes');
+    }
+
+  });
+
+
+
+  app.post('/getLunchRecipes', async (req, res) => {
+
+    try {
+    
+      const { username } = req.body;
+      
+      const user = await User.findOne({ username });
+     // const filter = { user };
+     const filter = { user , lunch: true };  
+        // Fetch listings matching the filter
+        const listings = await Recipe.find(filter);
+        
+        const transformedListings = listings.map((listing, index) => {
+          return {
+            title: listing.title,
+            user: listing.user, // Include the user field in the response
+            description: listing.description,
+            date: listing.date,
+            _id: listing._id,
+            id: index,
+            photo: listing.photo,
+          };
+        });
+     
+
+      res.json(transformedListings);
+   
+    } catch (error) {
+      console.error('Error fetching Recipes:', error);
+      res.status(500).send('Error fetching Recipes');
+    }
+
+  });
+
+
+
+
+  app.post('/getDinnerRecipes', async (req, res) => {
+
+    try {
+    
+      const { username } = req.body;
+      
+      const user = await User.findOne({ username });
+     // const filter = { user };
+     const filter = { user , dinner: true };  
+        // Fetch listings matching the filter
+        const listings = await Recipe.find(filter);
+        
+        const transformedListings = listings.map((listing, index) => {
+          return {
+            title: listing.title,
+            user: listing.user, // Include the user field in the response
+            description: listing.description,
+            date: listing.date,
+            _id: listing._id,
+            id: index,
+            photo: listing.photo,
+          };
+        });
+     
+
+      res.json(transformedListings);
+   
+    } catch (error) {
+      console.error('Error fetching Recipes:', error);
+      res.status(500).send('Error fetching Recipes');
+    }
+
+  });
+
 
   app.post('/getSearchRecipes', async (req, res) => {
 
@@ -459,6 +518,9 @@ app.use(session({
           date: listing.date,
           _id: listing._id,
           steps: listing.steps,
+          breakfast: listing.breakfast, 
+          lunch: listing.lunch,
+          dinner: listing.dinner,
         };
   
         // Include photo if it exists
