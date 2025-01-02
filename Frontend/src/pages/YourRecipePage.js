@@ -78,6 +78,16 @@ function YourRecipePage() {
 
           }
         }
+
+        else {
+
+          alert ("Not Signed in. Please Sign in Again")
+          window.location.href = "/signin";
+
+        }
+
+
+
       } catch (error) {
         console.error('Error fetching data:', error);
         alert('An error occurred. Please try again.');
@@ -164,6 +174,15 @@ function YourRecipePage() {
 
           }
         }
+
+
+        else {
+
+          alert ("Not Signed in. Please Sign in Again")
+          window.location.href = "/signin";
+
+        }
+
       } catch (error) {
         console.error('Error fetching data:', error);
         alert('An error occurred. Please try again.');
@@ -187,11 +206,7 @@ style={isRecipeHovering ? styles.linkHover : styles.link}>
 Your Recipes 
 </a>
 
-<a href = "/signin" 
-onMouseEnter={handleMouseEnterFeatured}
-onMouseLeave={handleMouseLeaveFeatured}
-style={isFeaturedHovering ? styles.linkHover : styles.link}> 
-Featured Recipes </a>
+
 
 <a href = "/mealgenerator" 
 onMouseEnter={handleMouseEnterMeal}

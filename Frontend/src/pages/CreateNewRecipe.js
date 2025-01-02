@@ -113,9 +113,13 @@ function CreateNewRecipe() {
       });
   
       if (!usernameResponse.ok) {
+        alert ("Not Signed in. Please Sign in Again")
+        window.location.href = "/signin";
         throw new Error('Failed to retrieve username');
       }
   
+
+
       const { username } = await usernameResponse.json();
   
       if (!username) {
@@ -172,11 +176,6 @@ style={isRecipeHovering ? styles.linkHover : styles.link}>
 Your Recipes 
 </a>
 
-<a href = "/signin" 
-onMouseEnter={handleMouseEnterFeatured}
-onMouseLeave={handleMouseLeaveFeatured}
-style={isFeaturedHovering ? styles.linkHover : styles.link}> 
-Featured Recipes </a>
 
 <a href = "/mealgenerator" 
 onMouseEnter={handleMouseEnterMeal}

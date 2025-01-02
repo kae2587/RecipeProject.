@@ -6,14 +6,21 @@ const [headerBools, setHeaderBools] = useState([false, false, false]);
 const [userRecipes, setUserRecipes] = useState([]);
 const [isOn, setIsOn] = useState(false);
 const [randArr, setrandArr] = useState([]);
+const [type, setType]=useState("");
+const [mealtype, setMealType]=useState("")
+
+//random numbers
 const [breakfastrandArr, setBreakfastrandArr] = useState([]);
 const [LunchrandArr, setLunchrandArr] = useState([]);
 const [dinnerrandArr, setDinnerrandArr] = useState([]);
 
+
+
+
+//array of objects
 const [breakfastRecipe, setBreakfastRecipe] = useState([]);
 const [lunchRecipe, setLunchRecipe] = useState([]);
 const [dinnerRecipe, setDinnerRecipes] = useState([]);
-
 
 
     const toggleSwitch = () => {
@@ -21,9 +28,29 @@ const [dinnerRecipe, setDinnerRecipes] = useState([]);
     };
 
 
+
+    const getQueryParam = (param) => {
+      const params = new URLSearchParams(window.location.search);
+      return params.get(param);
+    };
+  
+const setTypeFunc = (_ => {
+
+    const title = getQueryParam('title');
+    if (title) {
+        setType(title);
+    }
+})
+
+useEffect(() => {
+    setTypeFunc();
+   }, [] );
+
+
     const handleButtonClick = async () => {
 
     setIsOn(true);
+    
 
     try {
         const response = await fetch('http://localhost:8001/returnusername', {
@@ -40,23 +67,6 @@ const [dinnerRecipe, setDinnerRecipes] = useState([]);
                username: data.username,
             };
 
-
-
-            // const responsetwo = await fetch(' http://localhost:8001/getBreakfastRecipes', {
-            //     method: 'POST', 
-            //     headers: { 'Content-Type': 'application/json' }, 
-            //     credentials: 'include', 
-            //     body: JSON.stringify(user) 
-            //   })
-
-            // if (responsetwo.ok) {
-
-            //   const data2 = await responsetwo.json();
-            //   setUserRecipes(data2);
-            //   setRandArr(data2.length);
-            
-            // }
-
             const breakfastresponse = await fetch(' http://localhost:8001/getBreakfastRecipes', {
                 method: 'POST', 
                 headers: { 'Content-Type': 'application/json' }, 
@@ -67,8 +77,11 @@ const [dinnerRecipe, setDinnerRecipes] = useState([]);
             if (breakfastresponse.ok) {
 
               const breakfast = await breakfastresponse.json();
-              setBreakfastRecipe(breakfast);
-              setBreakfastrandArr(breakfast.length);
+                    if(breakfast.length > 0){
+                        setBreakfastRecipe(breakfast);
+                        setBreakfastRandArrFunc(breakfast.length);
+                    }
+
 
               const lunchReponse = await fetch(' http://localhost:8001/getLunchRecipes', {
                 method: 'POST', 
@@ -79,8 +92,11 @@ const [dinnerRecipe, setDinnerRecipes] = useState([]);
 
               if(lunchReponse.ok){
                 const lunch = await lunchReponse.json();
+
+                if (lunch.length > 0){
                 setLunchRecipe(lunch);
-                setLunchrandArr(lunch.length);
+                setLunchRandArrFunc(lunch.length);
+                }
 
                 const dinnerReponse = await fetch(' http://localhost:8001/getDinnerRecipes', {
                     method: 'POST', 
@@ -90,16 +106,35 @@ const [dinnerRecipe, setDinnerRecipes] = useState([]);
                   })
                   if(dinnerReponse.ok){
                     const dinner = await dinnerReponse.json();
+
+                    if (dinner.length > 0){
                     setDinnerRecipes(dinner);
-                    setDinnerrandArr(dinner.length);
+                    setDinnerRandArrFunc(dinner.length);
+                    }
+
+
+
                   }
 
               }
             
             }
 
+
+
           }
         }
+
+        else {
+
+            alert ("Not Signed in. Please Sign in Again")
+            window.location.href = "/signin";
+  
+          }
+
+
+
+
       } 
       
         catch (error) {
@@ -109,8 +144,14 @@ const [dinnerRecipe, setDinnerRecipes] = useState([]);
 
     };
 
+
+
+
+
     const handleButtonClickRand = () => {
-        setRandArr(userRecipes.length);
+        setBreakfastRandArrFunc(breakfastRecipe.length);
+        setLunchRandArrFunc(lunchRecipe.length);
+        setDinnerRandArrFunc(dinnerRecipe.length);
     };
 
     function getRandomNumber(min, max) {
@@ -121,18 +162,99 @@ const [dinnerRecipe, setDinnerRecipes] = useState([]);
 
       
 
-      const setRandArr = (max) => {
-        const newRandArr = []; // Local array to store unique random numbers
 
-        while (newRandArr.length < 7) {
-          const randomNumber = getRandomNumber(0, max);
-      
-          if (!newRandArr.includes(randomNumber)) {
-            newRandArr.push(randomNumber);
-          }
+      const setBreakfastRandArrFunc = (max) => {
+
+        const newRandArr = []; // Local array to store unique random numbers
+        if (max > 7){
+
+            while (newRandArr.length < 7) {
+            const randomNumber = getRandomNumber(0, max);
+        
+            if (!newRandArr.includes(randomNumber)) {
+                newRandArr.push(randomNumber);
+            }
+            }
+
         }
-      
-        setrandArr(newRandArr); // Update the state once after the loop
+        else {
+
+
+            while (newRandArr.length < 7) {
+                const randomNumber = getRandomNumber(0, max);
+            
+                newRandArr.push(randomNumber);
+
+                }
+
+
+        }
+
+
+
+        setBreakfastrandArr(newRandArr); // Update the state once after the loop
+      };
+
+
+      const setLunchRandArrFunc = (max) => {
+     
+        const newRandArr = []; // Local array to store unique random numbers
+        if (max > 7){
+
+            while (newRandArr.length < 7) {
+            const randomNumber = getRandomNumber(0, max);
+        
+            if (!newRandArr.includes(randomNumber)) {
+                newRandArr.push(randomNumber);
+            }
+            }
+
+        }
+        else {
+
+
+            while (newRandArr.length < 7) {
+                const randomNumber = getRandomNumber(0, max);
+            
+                newRandArr.push(randomNumber);
+
+                }
+
+
+        }
+        
+        setLunchrandArr(newRandArr); // Update the state once after the loop
+      };
+
+
+      const setDinnerRandArrFunc = (max) => {
+        
+        const newRandArr = []; // Local array to store unique random numbers
+        if (max > 7){
+
+            while (newRandArr.length < 7) {
+            const randomNumber = getRandomNumber(0, max);
+        
+            if (!newRandArr.includes(randomNumber)) {
+                newRandArr.push(randomNumber);
+            }
+            }
+
+        }
+        else {
+
+
+            while (newRandArr.length < 7) {
+                const randomNumber = getRandomNumber(0, max);
+            
+                newRandArr.push(randomNumber);
+
+                }
+
+
+        }
+
+        setDinnerrandArr(newRandArr); // Update the state once after the loop
       };
 
 
@@ -167,12 +289,7 @@ style={headerBools[0] ? styles.linkHover : styles.link}
 Your Recipes 
 </a>
 
-<a href = "/signin" 
-onMouseEnter={() => handleMouseEnter(1)}
-onMouseLeave={() => handleMouseLeave(1)}
-style={headerBools[1] ? styles.linkHover : styles.link}
-> 
-Featured Recipes </a>
+
 
 <a href = "/mealgenerator" 
 onMouseEnter={() => handleMouseEnter(2)}
@@ -183,148 +300,870 @@ style={headerBools[2] ? styles.linkHover : styles.link}
 
 </header>
 
+{!isOn && type == "SevenDay" && (
+
 <h style = {styles.header}>Generate a Meal Plan for Seven Days </h>
 
-{!isOn && (
+)}
+
+{!isOn && type == "SevenDay" && (
     <div style={styles.buttonForm}>
+        
   <button
-    style={styles.Deletebutton}
+
+
+onMouseEnter={() => handleMouseEnter(26)}
+onMouseLeave={() => handleMouseLeave(26)}
+style={headerBools[26] ? styles.DeletebuttonAfter : styles.Deletebutton }
+
     onClick={handleButtonClick}
   >
-    Generate Meal
+    Generate Meals
   </button>
   </div>
 )}
 
 
-{isOn && userRecipes.length > 0 && (
+{isOn && breakfastRecipe.length > 0 && lunchRecipe.length > 0  && dinnerRecipe.length > 0  && type == "SevenDay" && (
+
+<div>
+<h style = {styles.header}>Seven Day Plan </h>
 
 <div style={styles.fullform}>
 
- <Link to={`/certainrecipe?title=${encodeURIComponent(userRecipes[randArr[0]]._id)}` } style={styles.linkp}>
- <div  
+   
+<div 
+style={styles.form}
+ >
+
+<h style={styles.dayHeader}><u>Day One </u></h>
+<Link to={`/certainrecipe?title=${encodeURIComponent(breakfastRecipe[breakfastrandArr[0]]._id)}` } style={styles.linkp}>
+<h2 
  onMouseEnter={() => handleMouseEnter(3)}
  onMouseLeave={() => handleMouseLeave(3)}
- style={headerBools[3] ? styles.formtwo : styles.form }
- >
-<h style = {styles.dayHeader}><u>Day One </u></h>
-   <h2 >{userRecipes[randArr[0]].title}</h2>
-   <p >{userRecipes[randArr[0]].description}</p>
-   <p > <b>Date Posted:</b> {userRecipes[randArr[0]].date.slice(0, 10)}</p>
-  
- </div>
+ style={headerBools[3] ? styles.MealHeaderTwo : styles.MealHeader }
+
+>
+    Breakfast</h2>
+
+<p  
+onMouseEnter={() => handleMouseEnter(3)}
+ onMouseLeave={() => handleMouseLeave(3)}
+ style={headerBools[3] ? styles.MealParaTwo : styles.MealPara }
+
+ 
+ >{breakfastRecipe[breakfastrandArr[0]].title}</p>
 </Link>
 
 
-<Link to={`/certainrecipe?title=${encodeURIComponent(userRecipes[randArr[1]]._id)}` } style={styles.linkp}>
- <div  
+
+<Link to={`/certainrecipe?title=${encodeURIComponent(lunchRecipe[LunchrandArr[0]]._id)}` } style={styles.linkp}>
+<h2 
  onMouseEnter={() => handleMouseEnter(4)}
  onMouseLeave={() => handleMouseLeave(4)}
- style={headerBools[4] ? styles.formtwo : styles.form }
- >
-<h style = {styles.dayHeader}><u>Day Two </u></h>
-   <h2 >{userRecipes[randArr[1]].title}</h2>
-   <p >{userRecipes[randArr[1]].description}</p>
-   <p > <b>Date Posted:</b> {userRecipes[randArr[1]].date.slice(0, 10)}</p>
-  
- </div>
+ style={headerBools[4] ? styles.MealHeaderTwo : styles.MealHeader }
+
+> Lunch</h2>
+
+<p  
+onMouseEnter={() => handleMouseEnter(4)}
+ onMouseLeave={() => handleMouseLeave(4)}
+ style={headerBools[4] ? styles.MealParaTwo : styles.MealPara }
+
+ 
+ >{lunchRecipe[LunchrandArr[0]].title}</p>
 </Link>
 
 
-<Link to={`/certainrecipe?title=${encodeURIComponent(userRecipes[randArr[2]]._id)}` } style={styles.linkp}>
- <div  
+<Link to={`/certainrecipe?title=${encodeURIComponent(dinnerRecipe[dinnerrandArr[0]]._id)}` } style={styles.linkp}>
+<h2 
  onMouseEnter={() => handleMouseEnter(5)}
  onMouseLeave={() => handleMouseLeave(5)}
- style={headerBools[5] ? styles.formtwo : styles.form }
- >
-<h style = {styles.dayHeader}><u>Day Three </u></h>
-   <h2 >{userRecipes[randArr[2]].title}</h2>
-   <p >{userRecipes[randArr[2]].description}</p>
-   <p > <b>Date Posted:</b> {userRecipes[randArr[2]].date.slice(0, 10)}</p>
-  
- </div>
+ style={headerBools[5] ? styles.MealHeaderTwo : styles.MealHeader }
+
+> Dinner</h2>
+
+<p  
+onMouseEnter={() => handleMouseEnter(5)}
+ onMouseLeave={() => handleMouseLeave(5)}
+ style={headerBools[5] ? styles.MealParaTwo : styles.MealPara }
+
+ 
+ >{dinnerRecipe[dinnerrandArr[0]].title}</p>
 </Link>
 
+</div>
 
-<Link to={`/certainrecipe?title=${encodeURIComponent(userRecipes[randArr[3]]._id)}` } style={styles.linkp}>
- <div  
+
+
+<div 
+style={styles.form}
+ >
+
+<h style={styles.dayHeader}><u>Day Two </u></h>
+<Link to={`/certainrecipe?title=${encodeURIComponent(breakfastRecipe[breakfastrandArr[1]]._id)}` } style={styles.linkp}>
+<h2 
  onMouseEnter={() => handleMouseEnter(6)}
  onMouseLeave={() => handleMouseLeave(6)}
- style={headerBools[6] ? styles.formtwo : styles.form }
- >
-<h style = {styles.dayHeader}><u>Day Four </u></h>
-   <h2 >{userRecipes[randArr[3]].title}</h2>
-   <p >{userRecipes[randArr[3]].description}</p>
-   <p > <b>Date Posted:</b> {userRecipes[randArr[3]].date.slice(0, 10)}</p>
-  
- </div>
+ style={headerBools[6] ? styles.MealHeaderTwo : styles.MealHeader }
+
+>
+    Breakfast</h2>
+
+<p  
+onMouseEnter={() => handleMouseEnter(6)}
+ onMouseLeave={() => handleMouseLeave(6)}
+ style={headerBools[6] ? styles.MealParaTwo : styles.MealPara }
+
+ 
+ >{breakfastRecipe[breakfastrandArr[1]].title}</p>
 </Link>
 
 
 
-
-
-<Link to={`/certainrecipe?title=${encodeURIComponent(userRecipes[randArr[4]]._id)}` } style={styles.linkp}>
- <div  
+<Link to={`/certainrecipe?title=${encodeURIComponent(lunchRecipe[LunchrandArr[1]]._id)}` } style={styles.linkp}>
+<h2 
  onMouseEnter={() => handleMouseEnter(7)}
  onMouseLeave={() => handleMouseLeave(7)}
- style={headerBools[7] ? styles.formtwo : styles.form }
- >
-<h style = {styles.dayHeader}><u>Day Five </u></h>
-   <h2 >{userRecipes[randArr[4]].title}</h2>
-   <p >{userRecipes[randArr[4]].description}</p>
-   <p > <b>Date Posted:</b> {userRecipes[randArr[4]].date.slice(0, 10)}</p>
-  
- </div>
+ style={headerBools[7] ? styles.MealHeaderTwo : styles.MealHeader }
+
+> Lunch</h2>
+
+<p  
+onMouseEnter={() => handleMouseEnter(7)}
+ onMouseLeave={() => handleMouseLeave(7)}
+ style={headerBools[7] ? styles.MealParaTwo : styles.MealPara }
+
+ 
+ >{lunchRecipe[LunchrandArr[1]].title}</p>
 </Link>
 
 
-
-<Link to={`/certainrecipe?title=${encodeURIComponent(userRecipes[randArr[5]]._id)}` } style={styles.linkp}>
- <div  
+<Link to={`/certainrecipe?title=${encodeURIComponent(dinnerRecipe[dinnerrandArr[1]]._id)}` } style={styles.linkp}>
+<h2 
  onMouseEnter={() => handleMouseEnter(8)}
  onMouseLeave={() => handleMouseLeave(8)}
- style={headerBools[8] ? styles.formtwo : styles.form }
- >
-<h style = {styles.dayHeader}><u>Day Six </u></h>
-   <h2 >{userRecipes[randArr[5]].title}</h2>
-   <p >{userRecipes[randArr[5]].description}</p>
-   <p > <b>Date Posted:</b> {userRecipes[randArr[5]].date.slice(0, 10)}</p>
-  
- </div>
+ style={headerBools[8] ? styles.MealHeaderTwo : styles.MealHeader }
+
+> Dinner</h2>
+
+<p  
+onMouseEnter={() => handleMouseEnter(8)}
+ onMouseLeave={() => handleMouseLeave(8)}
+ style={headerBools[8] ? styles.MealParaTwo : styles.MealPara }
+
+ 
+ >{dinnerRecipe[dinnerrandArr[1]].title}</p>
 </Link>
+</div>
 
 
 
-<Link to={`/certainrecipe?title=${encodeURIComponent(userRecipes[randArr[6]]._id)}` } style={styles.linkp}>
- <div  
+
+
+
+<div 
+style={styles.form}
+ >
+
+<h style={styles.dayHeader}><u>Day Three </u></h>
+<Link to={`/certainrecipe?title=${encodeURIComponent(breakfastRecipe[breakfastrandArr[2]]._id)}` } style={styles.linkp}>
+<h2 
  onMouseEnter={() => handleMouseEnter(9)}
  onMouseLeave={() => handleMouseLeave(9)}
- style={headerBools[9] ? styles.formtwo : styles.form }
- >
-<h style = {styles.dayHeader}><u>Day Seven </u></h>
-   <h2 >{userRecipes[randArr[6]].title}</h2>
-   <p >{userRecipes[randArr[6]].description}</p>
-   <p > <b>Date Posted:</b> {userRecipes[randArr[6]].date.slice(0, 10)}</p>
-  
- </div>
+ style={headerBools[9] ? styles.MealHeaderTwo : styles.MealHeader }
+
+>
+    Breakfast</h2>
+
+<p  
+onMouseEnter={() => handleMouseEnter(9)}
+ onMouseLeave={() => handleMouseLeave(9)}
+ style={headerBools[9] ? styles.MealParaTwo : styles.MealPara }
+
+ 
+ >{breakfastRecipe[breakfastrandArr[2]].title}</p>
 </Link>
 
 
+
+<Link to={`/certainrecipe?title=${encodeURIComponent(lunchRecipe[LunchrandArr[2]]._id)}` } style={styles.linkp}>
+<h2 
+ onMouseEnter={() => handleMouseEnter(10)}
+ onMouseLeave={() => handleMouseLeave(10)}
+ style={headerBools[10] ? styles.MealHeaderTwo : styles.MealHeader }
+
+> Lunch</h2>
+
+<p  
+onMouseEnter={() => handleMouseEnter(10)}
+ onMouseLeave={() => handleMouseLeave(10)}
+ style={headerBools[10] ? styles.MealParaTwo : styles.MealPara }
+
+ 
+ >{lunchRecipe[LunchrandArr[2]].title}</p>
+</Link>
+
+
+<Link to={`/certainrecipe?title=${encodeURIComponent(dinnerRecipe[dinnerrandArr[2]]._id)}` } style={styles.linkp}>
+<h2 
+ onMouseEnter={() => handleMouseEnter(11)}
+ onMouseLeave={() => handleMouseLeave(11)}
+ style={headerBools[11] ? styles.MealHeaderTwo : styles.MealHeader }
+
+> Dinner</h2>
+
+<p  
+onMouseEnter={() => handleMouseEnter(11)}
+ onMouseLeave={() => handleMouseLeave(11)}
+ style={headerBools[11] ? styles.MealParaTwo : styles.MealPara }
+
+ 
+ >{dinnerRecipe[dinnerrandArr[2]].title}</p>
+</Link>
+
+</div>
+
+
+
+
+<div 
+style={styles.form}
+ >
+
+<h style={styles.dayHeader}><u>Day Four </u></h>
+<Link to={`/certainrecipe?title=${encodeURIComponent(breakfastRecipe[breakfastrandArr[3]]._id)}` } style={styles.linkp}>
+<h2 
+ onMouseEnter={() => handleMouseEnter(12)}
+ onMouseLeave={() => handleMouseLeave(12)}
+ style={headerBools[12] ? styles.MealHeaderTwo : styles.MealHeader }
+
+>
+    Breakfast</h2>
+
+<p  
+onMouseEnter={() => handleMouseEnter(12)}
+ onMouseLeave={() => handleMouseLeave(12)}
+ style={headerBools[12] ? styles.MealParaTwo : styles.MealPara }
+
+ 
+ >{breakfastRecipe[breakfastrandArr[3]].title}</p>
+</Link>
+
+
+
+<Link to={`/certainrecipe?title=${encodeURIComponent(lunchRecipe[LunchrandArr[3]]._id)}` } style={styles.linkp}>
+<h2 
+ onMouseEnter={() => handleMouseEnter(13)}
+ onMouseLeave={() => handleMouseLeave(13)}
+ style={headerBools[13] ? styles.MealHeaderTwo : styles.MealHeader }
+
+> Lunch</h2>
+
+<p  
+onMouseEnter={() => handleMouseEnter(13)}
+ onMouseLeave={() => handleMouseLeave(13)}
+ style={headerBools[13] ? styles.MealParaTwo : styles.MealPara }
+
+ 
+ >{lunchRecipe[LunchrandArr[3]].title}</p>
+</Link>
+
+
+<Link to={`/certainrecipe?title=${encodeURIComponent(dinnerRecipe[dinnerrandArr[3]]._id)}` } style={styles.linkp}>
+<h2 
+ onMouseEnter={() => handleMouseEnter(14)}
+ onMouseLeave={() => handleMouseLeave(14)}
+ style={headerBools[14] ? styles.MealHeaderTwo : styles.MealHeader }
+
+> Dinner</h2>
+
+<p  
+onMouseEnter={() => handleMouseEnter(14)}
+ onMouseLeave={() => handleMouseLeave(14)}
+ style={headerBools[14] ? styles.MealParaTwo : styles.MealPara }
+
+ 
+ >{dinnerRecipe[dinnerrandArr[3]].title}</p>
+</Link>
+
+</div>
+
+
+<div 
+style={styles.form}
+ >
+
+<h style={styles.dayHeader}><u>Day Five </u></h>
+<Link to={`/certainrecipe?title=${encodeURIComponent(breakfastRecipe[breakfastrandArr[4]]._id)}` } style={styles.linkp}>
+<h2 
+ onMouseEnter={() => handleMouseEnter(15)}
+ onMouseLeave={() => handleMouseLeave(15)}
+ style={headerBools[15] ? styles.MealHeaderTwo : styles.MealHeader }
+
+>
+    Breakfast</h2>
+
+<p  
+onMouseEnter={() => handleMouseEnter(15)}
+ onMouseLeave={() => handleMouseLeave(15)}
+ style={headerBools[15] ? styles.MealParaTwo : styles.MealPara }
+
+ 
+ >{breakfastRecipe[breakfastrandArr[4]].title}</p>
+</Link>
+
+
+
+<Link to={`/certainrecipe?title=${encodeURIComponent(lunchRecipe[LunchrandArr[4]]._id)}` } style={styles.linkp}>
+<h2 
+ onMouseEnter={() => handleMouseEnter(16)}
+ onMouseLeave={() => handleMouseLeave(16)}
+ style={headerBools[16] ? styles.MealHeaderTwo : styles.MealHeader }
+
+> Lunch</h2>
+
+<p  
+onMouseEnter={() => handleMouseEnter(16)}
+ onMouseLeave={() => handleMouseLeave(16)}
+ style={headerBools[16] ? styles.MealParaTwo : styles.MealPara }
+
+ 
+ >{lunchRecipe[LunchrandArr[4]].title}</p>
+</Link>
+
+
+<Link to={`/certainrecipe?title=${encodeURIComponent(dinnerRecipe[dinnerrandArr[4]]._id)}` } style={styles.linkp}>
+<h2 
+ onMouseEnter={() => handleMouseEnter(17)}
+ onMouseLeave={() => handleMouseLeave(17)}
+ style={headerBools[17] ? styles.MealHeaderTwo : styles.MealHeader }
+
+> Dinner</h2>
+
+<p  
+onMouseEnter={() => handleMouseEnter(17)}
+ onMouseLeave={() => handleMouseLeave(17)}
+ style={headerBools[17] ? styles.MealParaTwo : styles.MealPara }
+
+ 
+ >{dinnerRecipe[dinnerrandArr[4]].title}</p>
+</Link>
+
+</div>
+
+
+
+
+<div 
+style={styles.form}
+ >
+
+<h style={styles.dayHeader}><u>Day Six </u></h>
+<Link to={`/certainrecipe?title=${encodeURIComponent(breakfastRecipe[breakfastrandArr[5]]._id)}` } style={styles.linkp}>
+<h2 
+ onMouseEnter={() => handleMouseEnter(18)}
+ onMouseLeave={() => handleMouseLeave(18)}
+ style={headerBools[18] ? styles.MealHeaderTwo : styles.MealHeader }
+
+>
+    Breakfast</h2>
+
+<p  
+onMouseEnter={() => handleMouseEnter(18)}
+ onMouseLeave={() => handleMouseLeave(18)}
+ style={headerBools[18] ? styles.MealParaTwo : styles.MealPara }
+
+ 
+ >{breakfastRecipe[breakfastrandArr[5]].title}</p>
+</Link>
+
+
+
+<Link to={`/certainrecipe?title=${encodeURIComponent(lunchRecipe[LunchrandArr[5]]._id)}` } style={styles.linkp}>
+<h2 
+ onMouseEnter={() => handleMouseEnter(19)}
+ onMouseLeave={() => handleMouseLeave(19)}
+ style={headerBools[19] ? styles.MealHeaderTwo : styles.MealHeader }
+
+> Lunch</h2>
+
+<p  
+onMouseEnter={() => handleMouseEnter(19)}
+ onMouseLeave={() => handleMouseLeave(19)}
+ style={headerBools[19] ? styles.MealParaTwo : styles.MealPara }
+
+ 
+ >{lunchRecipe[LunchrandArr[5]].title}</p>
+</Link>
+
+
+<Link to={`/certainrecipe?title=${encodeURIComponent(dinnerRecipe[dinnerrandArr[5]]._id)}` } style={styles.linkp}>
+<h2 
+ onMouseEnter={() => handleMouseEnter(20)}
+ onMouseLeave={() => handleMouseLeave(20)}
+ style={headerBools[20] ? styles.MealHeaderTwo : styles.MealHeader }
+
+> Dinner</h2>
+
+<p  
+onMouseEnter={() => handleMouseEnter(20)}
+ onMouseLeave={() => handleMouseLeave(20)}
+ style={headerBools[20] ? styles.MealParaTwo : styles.MealPara }
+
+ 
+ >{dinnerRecipe[dinnerrandArr[5]].title}</p>
+</Link>
+
+</div>
+
+
+
+
+<div 
+style={styles.form}
+ >
+
+<h style={styles.dayHeader}><u>Day Seven </u></h>
+<Link to={`/certainrecipe?title=${encodeURIComponent(breakfastRecipe[breakfastrandArr[6]]._id)}` } style={styles.linkp}>
+<h2 
+ onMouseEnter={() => handleMouseEnter(21)}
+ onMouseLeave={() => handleMouseLeave(21)}
+ style={headerBools[21] ? styles.MealHeaderTwo : styles.MealHeader }
+
+>
+    Breakfast</h2>
+
+<p  
+onMouseEnter={() => handleMouseEnter(21)}
+ onMouseLeave={() => handleMouseLeave(21)}
+ style={headerBools[21] ? styles.MealParaTwo : styles.MealPara }
+
+ 
+ >{breakfastRecipe[breakfastrandArr[6]].title}</p>
+</Link>
+
+
+
+<Link to={`/certainrecipe?title=${encodeURIComponent(lunchRecipe[LunchrandArr[6]]._id)}` } style={styles.linkp}>
+<h2 
+ onMouseEnter={() => handleMouseEnter(22)}
+ onMouseLeave={() => handleMouseLeave(22)}
+ style={headerBools[22] ? styles.MealHeaderTwo : styles.MealHeader }
+
+> Lunch</h2>
+
+<p  
+onMouseEnter={() => handleMouseEnter(22)}
+ onMouseLeave={() => handleMouseLeave(22)}
+ style={headerBools[22] ? styles.MealParaTwo : styles.MealPara }
+
+ 
+ >{lunchRecipe[LunchrandArr[6]].title}</p>
+</Link>
+
+
+<Link to={`/certainrecipe?title=${encodeURIComponent(dinnerRecipe[dinnerrandArr[6]]._id)}` } style={styles.linkp}>
+<h2 
+ onMouseEnter={() => handleMouseEnter(23)}
+ onMouseLeave={() => handleMouseLeave(23)}
+ style={headerBools[23] ? styles.MealHeaderTwo : styles.MealHeader }
+
+> Dinner</h2>
+
+<p  
+onMouseEnter={() => handleMouseEnter(23)}
+ onMouseLeave={() => handleMouseLeave(23)}
+ style={headerBools[23] ? styles.MealParaTwo : styles.MealPara }
+
+ 
+ >{dinnerRecipe[dinnerrandArr[6]].title}</p>
+</Link>
+
+</div>
+
+</div>
 </div>
 
 )}
 
-{isOn && userRecipes.length > 0 && (
-<button
-    style={styles.Deletebutton}
-    onClick={handleButtonClickRand}
- //  onClick ={setRandArr(userRecipes.length)}
-  >
-Regenerate Meal Plan
-  </button>
+{isOn && breakfastRecipe.length > 0  && lunchRecipe.length > 0 && dinnerRecipe.length > 0   && type == "SevenDay" &&(
+    <div style={styles.buttonForm}>
+    <button
+    
+    onMouseEnter={() => handleMouseEnter(25)}
+     onMouseLeave={() => handleMouseLeave(25)}
+     style={headerBools[25] ? styles.DeletebuttonAfter : styles.Deletebutton }
+    
+        onClick={handleButtonClickRand}
+      >
+    
+    Regenerate Meal Plan
+      </button>
+    </div>
+)}
+
+
+
+
+
+
+{!isOn && type == "OneDay" && (
+
+<h style = {styles.header}>Generate a Meal Plan for One Day </h>
 
 )}
+
+{!isOn && type == "OneDay" && (
+    <div style={styles.buttonForm}>
+        
+  <button
+      onMouseEnter={() => handleMouseEnter(7)}
+      onMouseLeave={() => handleMouseLeave(7)}
+      style={headerBools[7] ? styles.DeletebuttonAfter : styles.Deletebutton }
+
+
+    onClick={handleButtonClick}
+  >
+    Generate Meals
+  </button>
+  </div>
+)}
+
+
+{isOn && breakfastRecipe.length > 0 && lunchRecipe.length > 0  && dinnerRecipe.length > 0  && type == "OneDay" && (
+
+<div>
+<h style = {styles.header}>One Day Plan </h>
+
+<div style={styles.fullformOneDay}>
+
+   
+<div 
+style={styles.form}
+ >
+
+<h style={styles.dayHeader}><u>Day Plan </u></h>
+<Link to={`/certainrecipe?title=${encodeURIComponent(breakfastRecipe[breakfastrandArr[0]]._id)}` } style={styles.linkp}>
+<h2 
+ onMouseEnter={() => handleMouseEnter(3)}
+ onMouseLeave={() => handleMouseLeave(3)}
+ style={headerBools[3] ? styles.MealHeaderTwo : styles.MealHeader }
+
+>
+    Breakfast</h2>
+
+<p  
+onMouseEnter={() => handleMouseEnter(3)}
+ onMouseLeave={() => handleMouseLeave(3)}
+ style={headerBools[3] ? styles.MealParaTwo : styles.MealPara }
+
+ 
+ >{breakfastRecipe[breakfastrandArr[0]].title}</p>
+</Link>
+
+
+<Link to={`/certainrecipe?title=${encodeURIComponent(lunchRecipe[LunchrandArr[0]]._id)}` } style={styles.linkp}>
+<h2 
+ onMouseEnter={() => handleMouseEnter(4)}
+ onMouseLeave={() => handleMouseLeave(4)}
+ style={headerBools[4] ? styles.MealHeaderTwo : styles.MealHeader }
+
+> Lunch</h2>
+
+<p  
+onMouseEnter={() => handleMouseEnter(4)}
+ onMouseLeave={() => handleMouseLeave(4)}
+ style={headerBools[4] ? styles.MealParaTwo : styles.MealPara }
+
+ 
+ >{lunchRecipe[LunchrandArr[0]].title}</p>
+</Link>
+
+
+<Link to={`/certainrecipe?title=${encodeURIComponent(dinnerRecipe[dinnerrandArr[0]]._id)}` } style={styles.linkp}>
+<h2 
+ onMouseEnter={() => handleMouseEnter(5)}
+ onMouseLeave={() => handleMouseLeave(5)}
+ style={headerBools[5] ? styles.MealHeaderTwo : styles.MealHeader }
+
+> Dinner</h2>
+
+<p  
+onMouseEnter={() => handleMouseEnter(5)}
+ onMouseLeave={() => handleMouseLeave(5)}
+ style={headerBools[5] ? styles.MealParaTwo : styles.MealPara }
+
+ 
+ >{dinnerRecipe[dinnerrandArr[0]].title}</p>
+</Link>
+
+
+</div>
+</div>
+</div>
+
+)}
+
+
+
+{isOn && breakfastRecipe.length > 0  && lunchRecipe.length > 0 && dinnerRecipe.length > 0   && type == "OneDay" &&(
+    <div style={styles.buttonForm}>
+<button
+
+onMouseEnter={() => handleMouseEnter(6)}
+ onMouseLeave={() => handleMouseLeave(6)}
+ style={headerBools[6] ? styles.DeletebuttonAfter : styles.Deletebutton }
+
+    onClick={handleButtonClickRand}
+  >
+
+Regenerate Meal Plan
+  </button>
+</div>
+)}
+
+
+
+
+
+
+{!isOn && type == "OneMeal" && mealtype == "" && (
+
+<h style = {styles.header}>Generate a Meal </h>
+
+)}
+
+{!isOn && type == "OneMeal" && mealtype == "" && (
+    <div style={styles.buttonForm}>
+        
+  <button
+       onMouseEnter={() => handleMouseEnter(3)}
+       onMouseLeave={() => handleMouseLeave(3)}
+       style={headerBools[3] ? styles.DeletebuttonAfter : styles.Deletebutton }
+
+       onClick={() => {
+        setMealType("Breakfast"); 
+        handleButtonClick(); 
+      }}
+  >
+    Generate Breakfast Meal
+  </button>
+
+  <button
+       onMouseEnter={() => handleMouseEnter(4)}
+       onMouseLeave={() => handleMouseLeave(4)}
+       style={headerBools[4] ? styles.DeletebuttonAfter : styles.Deletebutton }
+       onClick={() => {
+        setMealType("Lunch"); // Set the meal type
+        handleButtonClick(); // Call additional function
+      }}
+  >
+    Generate Lunch Meal
+  </button>
+
+  <button
+        onMouseEnter={() => handleMouseEnter(5)}
+        onMouseLeave={() => handleMouseLeave(5)}
+        style={headerBools[5] ? styles.DeletebuttonAfter : styles.Deletebutton }
+        onClick={() => {
+            setMealType("Dinner"); // Set the meal type
+            handleButtonClick(); // Call additional function
+          }}
+  >
+    Generate Dinner Meal
+  </button>
+
+  </div>
+)}
+
+
+
+
+{isOn && type == "OneMeal"  && mealtype == "Breakfast" && breakfastRecipe.length > 0 && (
+
+<div>
+<h style = {styles.header}>Breakfast  </h>
+<div style={styles.fullformOneDay}>
+
+   
+<div 
+style={styles.form}
+ >
+
+<Link to={`/certainrecipe?title=${encodeURIComponent(breakfastRecipe[breakfastrandArr[0]]._id)}` } style={styles.linkp}>
+
+
+<p  
+onMouseEnter={() => handleMouseEnter(6)}
+ onMouseLeave={() => handleMouseLeave(6)}
+ style={headerBools[6] ? styles.MealParaTwo : styles.MealPara }
+
+ 
+ >{breakfastRecipe[breakfastrandArr[0]].title}</p>
+
+
+ <p
+ onMouseEnter={() => handleMouseEnter(6)}
+ onMouseLeave={() => handleMouseLeave(6)}
+ style={headerBools[6] ? styles.mealpara : styles.para }
+ 
+ > <b>Description:</b> {breakfastRecipe[breakfastrandArr[0]].description}</p>
+</Link>
+
+</div>
+</div>
+</div> 
+
+
+)}
+
+
+{isOn && type == "OneMeal"  && mealtype == "Lunch" && lunchRecipe.length > 0 && (
+
+<div>
+<h style = {styles.header}>Lunch  </h>
+<div style={styles.fullformOneDay}>
+
+   
+<div 
+style={styles.form}
+ >
+
+<Link to={`/certainrecipe?title=${encodeURIComponent(lunchRecipe[LunchrandArr[0]]._id)}` } style={styles.linkp}>
+
+<p  
+onMouseEnter={() => handleMouseEnter(6)}
+ onMouseLeave={() => handleMouseLeave(6)}
+ style={headerBools[6] ? styles.MealParaTwo : styles.MealPara }
+
+ 
+ >{lunchRecipe[LunchrandArr[0]].title}</p>
+
+
+<p
+ onMouseEnter={() => handleMouseEnter(6)}
+ onMouseLeave={() => handleMouseLeave(6)}
+ style={headerBools[6] ? styles.mealpara : styles.para }
+ 
+ > <b>Description:</b> {lunchRecipe[LunchrandArr[0]].description}</p>
+
+
+
+
+</Link>
+
+</div>
+</div>
+</div> 
+
+
+)}
+
+
+{isOn && type == "OneMeal"  && mealtype == "Dinner" && dinnerRecipe.length > 0 && (
+
+<div>
+<h style = {styles.header}>Dinner  </h>
+<div style={styles.fullformOneDay}>
+
+   
+<div 
+style={styles.form}
+ >
+
+<Link to={`/certainrecipe?title=${encodeURIComponent(dinnerRecipe[dinnerrandArr[0]]._id)}` } style={styles.linkp}>
+
+<p  
+onMouseEnter={() => handleMouseEnter(6)}
+ onMouseLeave={() => handleMouseLeave(6)}
+ style={headerBools[6] ? styles.MealParaTwo : styles.MealPara }
+
+ 
+ >{dinnerRecipe[dinnerrandArr[0]].title}</p>
+
+
+<p
+ onMouseEnter={() => handleMouseEnter(6)}
+ onMouseLeave={() => handleMouseLeave(6)}
+ style={headerBools[6] ? styles.mealpara : styles.para }
+ 
+ > <b>Description:</b> {dinnerRecipe[dinnerrandArr[0]].description}</p>
+
+ 
+</Link>
+
+</div>
+</div>
+</div> 
+
+)}
+
+
+
+{isOn && breakfastRecipe.length > 0  && lunchRecipe.length > 0 && dinnerRecipe.length > 0   && type == "OneMeal"  && mealtype != ""  &&(
+    <div style={styles.buttonForm}>
+<button
+
+onMouseEnter={() => handleMouseEnter(7)}
+ onMouseLeave={() => handleMouseLeave(7)}
+ style={headerBools[7] ? styles.DeletebuttonAfter : styles.Deletebutton }
+
+    onClick={handleButtonClickRand}
+  >
+
+Regenerate Meal
+  </button>
+</div>
+)}
+
+
+
+
+
+{isOn && breakfastRecipe.length === 0  && lunchRecipe.length === 0 && dinnerRecipe.length === 0 &&(
+    <div style={styles.buttonForm}>
+<h2 style = {styles.dayHeader}>No Recipes in your Profile Page. Please Add some recipes!</h2>
+</div>
+)}
+
+
+
+
+{isOn && (breakfastRecipe.length === 0  || lunchRecipe.length === 0 || dinnerRecipe.length === 0) && type != "OneMeal" &&(
+    <div style={styles.buttonForm}>
+<h2 style = {styles.dayHeader}>Missing Breakfast and/or Lunch and/or Dinner Recipes!</h2>
+</div>
+)}
+
+
+{isOn && type == "OneMeal"  && mealtype == "Breakfast" && breakfastRecipe.length === 0 && (
+    <div style={styles.buttonForm}>
+<h2 style = {styles.dayHeader}>Missing Breakfast Recipes!</h2>
+</div>
+
+
+)}
+
+
+{isOn && type == "OneMeal"  && mealtype == "Lunch" && lunchRecipe.length === 0 && (
+    <div style={styles.buttonForm}>
+<h2 style = {styles.dayHeader}>Missing Lunch Recipes!</h2>
+</div>
+
+
+)}
+
+
+{isOn && type == "OneMeal"  && mealtype == "Dinner" && dinnerRecipe.length === 0 && (
+    <div style={styles.buttonForm}>
+    <h2 style = {styles.dayHeader}>Missing Dinner Recipes!</h2>
+    </div>
+    
+    
+    )}
+
+
 
 </>
 
@@ -377,6 +1216,7 @@ const styles = {
         justifyContent: "center", // Centers content horizontally
         fontWeight: "bold"
       },
+
       dayHeader:{
         fontSize: "1.6rem",
         fontFamily: "'Georgia', serif",
@@ -436,7 +1276,7 @@ const styles = {
         color: "#000000",
         border: "1.5px solid #000",
         borderRadius: "30px",
-        padding: "0.4rem 1.7rem",
+        padding: "1rem 1.7rem",
         fontSize: "1rem",
         fontWeight: "bold",
         cursor: "pointer",
@@ -446,10 +1286,30 @@ const styles = {
         fontFamily: "'Georgia', serif",
       },
 
+
+      DeletebuttonAfter:{
+        backgroundColor: "#000000",
+        color: "#ffffff",
+        border: "1.5px solid #000",
+        borderRadius: "30px",
+        padding: "1rem 1.7rem",
+        fontSize: "1rem",
+        fontWeight: "bold",
+        cursor: "pointer",
+        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+        transition: "background-color 0.3s ease",
+        margin: ".6rem",
+        fontFamily: "'Georgia', serif",
+
+
+      },
+
       buttonForm:{
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        marginBottom: "3rem",
+        flexDirection: "column",
       },
 
       form: {
@@ -466,6 +1326,7 @@ const styles = {
          margin: "1rem",
          textAlign: "center",
          textDecoration: "none",
+          textAlign: "center",
       },
 
       formtwo: {
@@ -498,9 +1359,55 @@ const styles = {
         flexWrap: "wrap",
         padding: "1rem 1.5rem",
         boxSizing: "border-box", // Ensure border/padding doesn’t reduce width
+         alignItems: "center",
+      },
+
+      fullformOneDay: {
+        width: "100vw", // Use full viewport width
+        display: "flex",
+        alignItems: "flex-start",
+        flexDirection: "colum",
+        flexWrap: "wrap",
+        padding: "1rem 1.5rem",
+        boxSizing: "border-box", // Ensure border/padding doesn’t reduce width
+        alignItems: "center",
+        textAlign: "center",
+        justifyContent: "center",
       },
 
 
+      MealHeader:{
+        fontSize: "1.3rem",
+        fontFamily: "'Georgia', serif",
+      },
+
+      MealHeaderTwo:{
+        fontSize: "1.3rem",
+        fontFamily: "'Georgia', serif",
+        color: "#97AFCB",
+      },
+
+      MealPara:{
+        fontSize: "1.3rem",
+        fontFamily: "'Georgia', serif",
+      },
+
+
+      MealParaTwo:{
+        fontSize: "1.3rem",
+        fontFamily: "'Georgia', serif",
+        color: "#97AFCB",
+      },
+
+      para:{
+        fontFamily: "'Georgia', serif",
+
+      },
+
+      mealpara:{
+        fontFamily: "'Georgia', serif",
+        color: "#97AFCB",
+      },
 };
 
 
@@ -508,12 +1415,7 @@ export default GenerateSevenDay
 
 
 
-{/* <div>
-<h> </h>
-<div style={styles.switchContainer}>
-        <div style={isOn ? styles.switch : styles.IsOnswitch} onClick={toggleSwitch}>
-          <div style={isOn ? styles.switchCircle : styles.IsOnswitchCircle }></div>
-        </div>
-</div>
 
-</div> */}
+
+
+

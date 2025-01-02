@@ -35,12 +35,7 @@ style={headerBools[0] ? styles.linkHover : styles.link}
 Your Recipes 
 </a>
 
-<a href = "/signin" 
-onMouseEnter={() => handleMouseEnter(1)}
-onMouseLeave={() => handleMouseLeave(1)}
-style={headerBools[1] ? styles.linkHover : styles.link}
-> 
-Featured Recipes </a>
+
 
 <a href = "/mealgenerator" 
 onMouseEnter={() => handleMouseEnter(2)}
@@ -64,7 +59,10 @@ style={headerBools[3] ? styles.formtwo : styles.form}
 
 >
     
-<a href="/generatesevenday" style={headerBools[3] ? styles.formTexttwo : styles.formText}>
+
+
+
+<a href="/generatesevenday?title=SevenDay" style={headerBools[3] ? styles.formTexttwo : styles.formText}>
 Generate a seven day plan</a>
 </div>
 
@@ -74,7 +72,7 @@ onMouseLeave={() => handleMouseLeave(4)}
 style={headerBools[4] ? styles.formtwo : styles.form}
 
 >
-<a href="#" style={headerBools[4] ? styles.formTexttwo : styles.formText}>Generate a one day plan</a>
+<a href="/generatesevenday?title=OneDay" style={headerBools[4] ? styles.formTexttwo : styles.formText}>Generate a one day plan</a>
 </div>
 
 
@@ -84,7 +82,7 @@ onMouseLeave={() => handleMouseLeave(5)}
 style={headerBools[5] ? styles.formtwo : styles.form}
 
 >
-<a href="#" style={headerBools[5] ? styles.formTexttwo : styles.formText}> Generate one meal</a>
+<a href="/generatesevenday?title=OneMeal" style={headerBools[5] ? styles.formTexttwo : styles.formText}> Generate one meal</a>
 </div>
 </div>
 

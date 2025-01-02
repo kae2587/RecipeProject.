@@ -105,14 +105,8 @@ return(
         >
           Your Recipes
         </a>
-        <a
-          href="/signin"
-          onMouseEnter={() => handleMouseEnter(1)}
-          onMouseLeave={() => handleMouseLeave(1)}
-          style={headerBools[1] ? styles.linkHover : styles.link}
-        >
-          Featured Recipes
-        </a>
+
+
         <a
           href="/mealgenerator"
           onMouseEnter={() => handleMouseEnter(2)}

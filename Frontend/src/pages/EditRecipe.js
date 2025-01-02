@@ -235,6 +235,17 @@ const handleFileChange = (e) => {
           }
         }
       }
+
+
+      else {
+        alert ("Not Signed in. Please Sign in Again")
+        window.location.href = "/signin";
+
+      }
+
+
+
+
     } catch (error) {
       console.error('Error fetching data:', error);
       alert('An error occurred. Please try again.');
@@ -253,11 +264,6 @@ style={headerBools[0] ? styles.linkHover : styles.link}>
 Your Recipes 
 </a>
 
-<a href = "/signin" 
-onMouseEnter={() => handleMouseEnter(1)}
-onMouseLeave={() => handleMouseLeave(1)}
-style={headerBools[1] ? styles.linkHover : styles.link}> 
-Featured Recipes </a>
 
 <a href = "/mealgenerator" 
 onMouseEnter={() => handleMouseEnter(2)}
