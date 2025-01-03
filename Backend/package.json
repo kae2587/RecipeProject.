@@ -4,7 +4,9 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js"
+    "start": "node app.js",
+    "seedRecipes": "node Seeds/seedRecipes.js",
+    "seedUsers": "node Seeds/seedUsers.js"
   },
   "author": "",
   "license": "ISC",
@@ -20,3 +22,6 @@
     "multer": "^1.4.5-lts.1"
   }
 }
+
+
+

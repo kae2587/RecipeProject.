@@ -25,7 +25,6 @@ function YourRecipePage() {
         if (response.ok) {
           const data = await response.json();
           if (data.username) {
-            
 
             const user = {
               username: data.username,
@@ -38,6 +37,7 @@ function YourRecipePage() {
              
             const user = {
               username: data.username,
+             
             };
 
 
@@ -147,8 +147,8 @@ function YourRecipePage() {
         if (response.ok) {
           const data = await response.json();
           if (data.username) {
+  
             
-
             const user = {
               username: data.username,
             };

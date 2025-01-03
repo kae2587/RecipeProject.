@@ -129,13 +129,15 @@ app.use(session({
     try {
       const { title, description , username, breakfast, lunch, dinner} = req.body;
       const steps = req.body.steps ? [].concat(req.body.steps) : [];
-      const user = await User.findOne({ username });
-      if(user){
+      const users = await User.findOne({ username });
+        
+        
+      if(users){
       const recipe = new Recipe({
         title,
         description,
         steps,
-        user,
+        user: username,
         photo: req.file
           ? {
               data: req.file.buffer,
@@ -285,13 +287,19 @@ app.use(session({
     try {
     
       const { username } = req.body;
-      
-      const user = await User.findOne({ username });
-      const filter = { user };
+  
+
+      //const user = await User.findOne({ username });
+
+
+
+      const filter = { user: username };
         
         // Fetch listings matching the filter
         const listings = await Recipe.find(filter);
-        //console.log(listings);
+
+
+        console.log(listings);
         
         const transformedListings = listings.map((listing, index) => {
           return {
@@ -323,9 +331,9 @@ app.use(session({
     
       const { username } = req.body;
       
-      const user = await User.findOne({ username });
+      const users = await User.findOne({ username });
      // const filter = { user };
-     const filter = { user , breakfast: true };  
+     const filter = { user:username, breakfast: true };  
         // Fetch listings matching the filter
         const listings = await Recipe.find(filter);
     
@@ -360,9 +368,9 @@ app.use(session({
     
       const { username } = req.body;
       
-      const user = await User.findOne({ username });
+      //const user = await User.findOne({ username });
      // const filter = { user };
-     const filter = { user , lunch: true };  
+     const filter = { user:username , lunch: true };  
         // Fetch listings matching the filter
         const listings = await Recipe.find(filter);
         
@@ -397,9 +405,9 @@ app.use(session({
     
       const { username } = req.body;
       
-      const user = await User.findOne({ username });
+      //const user = await User.findOne({ username });
      // const filter = { user };
-     const filter = { user , dinner: true };  
+     const filter = { user:username , dinner: true };  
         // Fetch listings matching the filter
         const listings = await Recipe.find(filter);
         
@@ -431,10 +439,10 @@ app.use(session({
     try {
     
       const { username, title } = req.body;
-      const user = await User.findOne({ username });
+     // const user = await User.findOne({ username });
     // Use a regex for partial and case-insensitive matching of the title
     const filter = {
-      user,
+      user:username,
       title: { $regex: title, $options: 'i' } // 'i' for case-insensitive matching
     };
         
