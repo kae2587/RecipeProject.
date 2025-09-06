@@ -679,7 +679,7 @@ mongoose.connect(mongoURI)
     //   },
     // }));
 
-    
+
     app.use(session({
       secret: SESSION_SECRET,
       resave: false,
@@ -692,7 +692,8 @@ mongoose.connect(mongoURI)
         maxAge: 1000 * 60 * 60 * 24,
         httpOnly: true,
         secure: true,                
-        sameSite: 'none',           
+        sameSite: 'none',   
+        domain: "recipeproject-2.onrender.com",        
       },
     }));
 
