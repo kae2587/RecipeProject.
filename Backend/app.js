@@ -664,6 +664,22 @@ mongoose.connect(mongoURI)
     // Sessions AFTER DB is connected
     const SESSION_SECRET = process.env.SESSION_SECRET || 'your_secret_key_here';
 
+    // app.use(session({
+    //   secret: SESSION_SECRET,
+    //   resave: false,
+    //   saveUninitialized: false,
+    //   store: MongoStore.create({
+    //     mongoUrl: mongoURI,
+    //     collectionName: 'sessions',
+    //   }),
+    //   cookie: {
+    //     maxAge: 1000 * 60 * 60 * 24,
+    //     httpOnly: true,
+    //     secure: false, // set true in production (https)
+    //   },
+    // }));
+
+    
     app.use(session({
       secret: SESSION_SECRET,
       resave: false,
@@ -675,7 +691,8 @@ mongoose.connect(mongoURI)
       cookie: {
         maxAge: 1000 * 60 * 60 * 24,
         httpOnly: true,
-        secure: false, // set true in production (https)
+        secure: true,                
+        sameSite: 'none',           
       },
     }));
 
@@ -896,6 +913,7 @@ mongoose.connect(mongoURI)
     try {
     
       const { username } = req.body;
+   
   
 
       //const user = await User.findOne({ username });
