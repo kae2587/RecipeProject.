@@ -107,7 +107,9 @@ function CreateNewRecipe() {
   
     try {
       // Fetch the username
-      const usernameResponse = await fetch('http://localhost:8001/returnusername', {
+      // const usernameResponse = await fetch('http://localhost:8001/returnusername', {
+
+      const usernameResponse = await fetch(' https://recipeproject-2.onrender.com/returnusername', {
         method: 'GET',
         credentials: 'include', // Include session cookies
       });
@@ -132,7 +134,8 @@ function CreateNewRecipe() {
       formData.append('dinner', isOn[2]);
   
       // Submit the recipe
-      const recipeResponse = await fetch('http://localhost:8001/addrecipe', {
+      //const recipeResponse = await fetch('http://localhost:8001/addrecipe', {
+        const recipeResponse = await fetch(' https://recipeproject-2.onrender.com/addrecipe', {
         method: 'POST',
         body: formData,
       });

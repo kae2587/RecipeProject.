@@ -48,7 +48,8 @@ const getSteps = async (title) => {
         _id: title,
       };
 
-    const responsetwo = await fetch(' http://localhost:8001/getSteps', {
+    // const responsetwo = await fetch(' http://localhost:8001/getSteps', {
+      const responsetwo = await fetch(' https://recipeproject-2.onrender.com/getSteps', {
         method: 'POST', 
         headers: { 'Content-Type': 'application/json' }, 
         credentials: 'include', 
@@ -98,7 +99,8 @@ const handleFileChange = (e) => {
             _id: title,
           };
     
-          const responsetwo = await fetch(' http://localhost:8001/getCertainRecipe', {
+         // const responsetwo = await fetch(' http://localhost:8001/getCertainRecipe', {
+          const responsetwo = await fetch(' https://recipeproject-2.onrender.com/getCertainRecipe', {
             method: 'POST', 
             headers: { 'Content-Type': 'application/json' }, 
             credentials: 'include', 
@@ -184,7 +186,8 @@ const handleFileChange = (e) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:8001/returnusername', {
+      // const response = await fetch('http://localhost:8001/returnusername', {
+        const response = await fetch('https://recipeproject-2.onrender.com/returnusername', {
         method: 'GET',
         credentials: 'include', // Include session cookies
       });
@@ -214,7 +217,8 @@ const handleFileChange = (e) => {
 
 
 
-          const response = await fetch('http://localhost:8001/editrecipe', {
+         // const response = await fetch('http://localhost:8001/editrecipe', {
+          const response = await fetch('https://recipeproject-2.onrender.com/editrecipe', {
             method: 'POST',
             // headers: { 'Content-Type': 'application/json' },
             // credentials: 'include',

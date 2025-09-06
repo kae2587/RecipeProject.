@@ -680,6 +680,24 @@ mongoose.connect(mongoURI)
     // }));
 
 
+    // app.use(session({
+    //   secret: SESSION_SECRET,
+    //   resave: false,
+    //   saveUninitialized: false,
+    //   store: MongoStore.create({
+    //     mongoUrl: mongoURI,
+    //     collectionName: 'sessions',
+    //   }),
+    //   cookie: {
+    //     maxAge: 1000 * 60 * 60 * 24,
+    //     httpOnly: true,
+    //     secure: true,                
+    //     sameSite: 'none',   
+    //     domain: "recipeproject-2.onrender.com",        
+    //   },
+    // }));
+
+
     app.use(session({
       secret: SESSION_SECRET,
       resave: false,
@@ -691,11 +709,12 @@ mongoose.connect(mongoURI)
       cookie: {
         maxAge: 1000 * 60 * 60 * 24,
         httpOnly: true,
-        secure: true,                
-        sameSite: 'none',   
-        domain: "recipeproject-2.onrender.com",        
+        secure: process.env.NODE_ENV === "production", // ✅ true in production
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax" // ✅ needed for Chrome
       },
     }));
+    
+
 
     // --- Routes go here ---
 
