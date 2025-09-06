@@ -35,7 +35,7 @@ function SignUp() {
     };
 
 
-    const response = await fetch(' http://localhost:8001/adduser', {
+    const response = await fetch('http://localhost:8001/adduser', {
       method: 'POST', 
       headers: { 'Content-Type': 'application/json' }, 
       credentials: 'include', 
