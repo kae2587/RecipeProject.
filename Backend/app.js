@@ -613,7 +613,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
-const bcrypt = require('bcrypt');
+//const bcrypt = require('bcrypt');
+const bcrypt = require("bcryptjs");
+
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const multer = require("multer");
@@ -631,10 +633,19 @@ require('dotenv').config();
 app.use(express.static(path.join(__dirname, '../Frontend/public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+// app.use(cors({
+//   origin: 'http://localhost:3000',
+//   credentials: true
+// }));
+
+
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: "https://recipeprojecttwo.web.app",  // your Firebase Hosting URL
+  methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
+
+
 app.use(express.static(path.join(__dirname, '../Frontend/build')));
 
 // Route to test frontend serving
@@ -653,6 +664,40 @@ mongoose.connect(mongoURI)
     // Sessions AFTER DB is connected
     const SESSION_SECRET = process.env.SESSION_SECRET || 'your_secret_key_here';
 
+    // app.use(session({
+    //   secret: SESSION_SECRET,
+    //   resave: false,
+    //   saveUninitialized: false,
+    //   store: MongoStore.create({
+    //     mongoUrl: mongoURI,
+    //     collectionName: 'sessions',
+    //   }),
+    //   cookie: {
+    //     maxAge: 1000 * 60 * 60 * 24,
+    //     httpOnly: true,
+    //     secure: false, // set true in production (https)
+    //   },
+    // }));
+
+
+    // app.use(session({
+    //   secret: SESSION_SECRET,
+    //   resave: false,
+    //   saveUninitialized: false,
+    //   store: MongoStore.create({
+    //     mongoUrl: mongoURI,
+    //     collectionName: 'sessions',
+    //   }),
+    //   cookie: {
+    //     maxAge: 1000 * 60 * 60 * 24,
+    //     httpOnly: true,
+    //     secure: true,                
+    //     sameSite: 'none',   
+    //     domain: "recipeproject-2.onrender.com",        
+    //   },
+    // }));
+
+
     app.use(session({
       secret: SESSION_SECRET,
       resave: false,
@@ -664,9 +709,12 @@ mongoose.connect(mongoURI)
       cookie: {
         maxAge: 1000 * 60 * 60 * 24,
         httpOnly: true,
-        secure: false, // set true in production (https)
+        secure: process.env.NODE_ENV === "production", // ✅ true in production
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax" // ✅ needed for Chrome
       },
     }));
+    
+
 
     // --- Routes go here ---
 
@@ -885,6 +933,7 @@ mongoose.connect(mongoURI)
     try {
     
       const { username } = req.body;
+   
   
 
       //const user = await User.findOne({ username });

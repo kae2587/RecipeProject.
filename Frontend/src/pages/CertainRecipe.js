@@ -18,7 +18,8 @@ const user = {
     _id: id,
   };
 
-  const responsetwo = await fetch(' http://localhost:8001/deleterecipe', {
+  //const responsetwo = await fetch(' http://localhost:8001/deleterecipe', {
+    const responsetwo = await fetch('https://recipeproject-2.onrender.com/deleterecipe', {
     method: 'POST', 
     headers: { 'Content-Type': 'application/json' }, 
     credentials: 'include', 
@@ -73,7 +74,8 @@ const handleMouseEnter = (id) => {
         _id: title,
       };
 
-      const responsetwo = await fetch(' http://localhost:8001/getCertainRecipe', {
+     // const responsetwo = await fetch(' http://localhost:8001/getCertainRecipe', {
+      const responsetwo = await fetch('  https://recipeproject-2.onrender.com/getCertainRecipe', {
         method: 'POST', 
         headers: { 'Content-Type': 'application/json' }, 
         credentials: 'include', 

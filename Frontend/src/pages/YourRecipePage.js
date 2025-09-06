@@ -17,7 +17,8 @@ function YourRecipePage() {
 
     const handleSearch = async () => {
       try {
-        const response = await fetch('http://localhost:8001/returnusername', {
+       // const response = await fetch('http://localhost:8001/returnusername', {
+        const response = await fetch('https://recipeproject-2.onrender.com/returnusername', {
           method: 'GET',
           credentials: 'include', // Include session cookies
         });
@@ -42,7 +43,8 @@ function YourRecipePage() {
 
 
 
-            const responsetwo = await fetch(' http://localhost:8001/getRecipes', {
+           // const responsetwo = await fetch(' http://localhost:8001/getRecipes', {
+            const responsetwo = await fetch(' https://recipeproject-2.onrender.com/getRecipes', {
               method: 'POST', 
               headers: { 'Content-Type': 'application/json' }, 
               credentials: 'include', 
@@ -60,7 +62,8 @@ function YourRecipePage() {
             }
 
             else {
-            const responsetwo = await fetch(' http://localhost:8001/getSearchRecipes', {
+           // const responsetwo = await fetch(' http://localhost:8001/getSearchRecipes', {
+            const responsetwo = await fetch(' https://recipeproject-2.onrender.com/getSearchRecipes', {
               method: 'POST', 
               headers: { 'Content-Type': 'application/json' }, 
               credentials: 'include', 
@@ -139,7 +142,8 @@ function YourRecipePage() {
 
     const fetchRecipes = async () => {
       try {
-        const response = await fetch('http://localhost:8001/returnusername', {
+       // const response = await fetch('http://localhost:8001/returnusername', {
+        const response = await fetch('https://recipeproject-2.onrender.com/returnusername', {
           method: 'GET',
           credentials: 'include', // Include session cookies
         });
@@ -155,7 +159,8 @@ function YourRecipePage() {
 
 
 
-            const responsetwo = await fetch(' http://localhost:8001/getRecipes', {
+            // const responsetwo = await fetch(' http://localhost:8001/getRecipes', {
+              const responsetwo = await fetch(' https://recipeproject-2.onrender.com/getRecipes', {
               method: 'POST', 
               headers: { 'Content-Type': 'application/json' }, 
               credentials: 'include', 

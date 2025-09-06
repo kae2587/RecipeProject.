@@ -53,7 +53,8 @@ useEffect(() => {
     
 
     try {
-        const response = await fetch('http://localhost:8001/returnusername', {
+        // const response = await fetch('http://localhost:8001/returnusername', {
+          const response = await fetch('https://recipeproject-2.onrender.com/returnusername', {
           method: 'GET',
           credentials: 'include', // Include session cookies
         });
@@ -67,7 +68,8 @@ useEffect(() => {
                username: data.username,
             };
 
-            const breakfastresponse = await fetch(' http://localhost:8001/getBreakfastRecipes', {
+            // const breakfastresponse = await fetch(' http://localhost:8001/getBreakfastRecipes', {
+              const breakfastresponse = await fetch(' https://recipeproject-2.onrender.com/getBreakfastRecipes', {
                 method: 'POST', 
                 headers: { 'Content-Type': 'application/json' }, 
                 credentials: 'include', 
@@ -83,7 +85,8 @@ useEffect(() => {
                     }
 
 
-              const lunchReponse = await fetch(' http://localhost:8001/getLunchRecipes', {
+             // const lunchReponse = await fetch(' http://localhost:8001/getLunchRecipes', {
+               const lunchReponse = await fetch(' https://recipeproject-2.onrender.com/getLunchRecipes', {
                 method: 'POST', 
                 headers: { 'Content-Type': 'application/json' }, 
                 credentials: 'include', 
@@ -98,7 +101,8 @@ useEffect(() => {
                 setLunchRandArrFunc(lunch.length);
                 }
 
-                const dinnerReponse = await fetch(' http://localhost:8001/getDinnerRecipes', {
+              //  const dinnerReponse = await fetch(' http://localhost:8001/getDinnerRecipes', {
+                const dinnerReponse = await fetch('https://recipeproject-2.onrender.com/getDinnerRecipes', {
                     method: 'POST', 
                     headers: { 'Content-Type': 'application/json' }, 
                     credentials: 'include', 
