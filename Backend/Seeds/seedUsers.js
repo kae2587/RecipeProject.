@@ -72,7 +72,8 @@
 
 const mongoose = require('mongoose');
 const { User } = require('../models/Users'); 
-const bcrypt = require('bcrypt');
+//const bcrypt = require('bcrypt');
+const bcrypt = require("bcryptjs");
 require('dotenv').config(); // ✅ Load env vars
 
 const saltRounds = 8;
