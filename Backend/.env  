@@ -1,0 +1,3 @@
+MONGO_URL=mongodb+srv://recipe_user:YourPassword@cluster0.xxxxx.mongodb.net/recipe_project
+SESSION_SECRET=supersecretkey
+

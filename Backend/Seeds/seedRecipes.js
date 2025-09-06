@@ -1,19 +1,36 @@
+// const mongoose = require('mongoose');
+// const { Recipe } = require('../models/Recipes'); // Adjust the path if necessary
+
+
+
+// //npm run seedRecipes
+
+// // Connect to MongoDB
+// mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/recipe_project')
+//   .then(() => {
+//     console.log('✅ Connected to MongoDB for seeding recipes');
+//   })
+//   .catch((error) => {
+//     console.error('❌ Connection error:', error);
+//     process.exit(1); // Exit process with failure
+//   });
+
+
 const mongoose = require('mongoose');
-const { Recipe } = require('../models/Recipes'); // Adjust the path if necessary
-
-
-
-//npm run seedRecipes
+const { Recipe } = require('../models/Recipes'); 
+require('dotenv').config(); // ✅ load .env
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/recipe_project')
+//mongoose.connect(process.env.MONGO_URL || 'mongodb://localhost:27017/recipe_project')
+mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/recipe_project')
   .then(() => {
     console.log('✅ Connected to MongoDB for seeding recipes');
   })
   .catch((error) => {
     console.error('❌ Connection error:', error);
-    process.exit(1); // Exit process with failure
+    process.exit(1);
   });
+
 
 // Sample Recipes Data
 const recipes = [
@@ -25,7 +42,7 @@ const recipes = [
     lunch: false,
     dinner: false,
     steps: ['Mix ingredients.', 'Cook on skillet.', 'Serve with syrup.'],
-    user: 'testaccount',
+    user: 'testaccount1',
   },
   {
     title: 'Omelette',
@@ -34,7 +51,7 @@ const recipes = [
     lunch: false,
     dinner: false,
     steps: ['Beat eggs.', 'Cook with cheese and ham.', 'Serve warm.'],
-    user: 'testaccount',
+    user: 'testaccount1',
   },
   {
     title: 'Smoothie Bowl',
@@ -43,7 +60,7 @@ const recipes = [
     lunch: false,
     dinner: false,
     steps: ['Blend berries.', 'Pour into bowl.', 'Add toppings.'],
-    user: 'testaccount',
+    user: 'testaccount1',
   },
 
   {
@@ -53,7 +70,7 @@ const recipes = [
     lunch: false,
     dinner: false,
     steps: ['Get a bagel and toast', 'Once toasted, add cream cheese to both pieces.'],
-    user: 'testaccount',
+    user: 'testaccount1',
   },
 
 
@@ -64,7 +81,7 @@ const recipes = [
     lunch: false,
     dinner: false,
     steps: ['Get a cup of oats', 'Add a quarter of a cup of water and 3/4 of a cup with milk to a pot', 'Boil the mix of water and milk', 'Add oats to mix', 'Leave until you get desired consistency', 'Add a bit of peanut butter to warm oatmeal', 'Add some bannanas'],
-    user: 'testaccount',
+    user: 'testaccount1',
   },
 
   
@@ -75,7 +92,7 @@ const recipes = [
     lunch: false,
     dinner: false,
     steps: ['Crack two eggs in a plate', 'wisk the eggs and add a bit of milk', 'Turn on stove with pan, let the pan heat for about three minutes','Once the pan is hot add a tea spoom of butter/oil to entire pan', 'Add misture of eggs and milk to pan', 'Cook until eggs are solid'],
-    user: 'testaccount',
+    user: 'testaccount1',
   },
 
 
@@ -95,7 +112,7 @@ const recipes = [
     "Fold the sides of the tortilla inward, then roll it up tightly from the bottom to create a burrito.",
     "Serve immediately and enjoy!"
   ],
-  user: "testaccount",
+  user: "testaccount1",
 },
 
 
@@ -107,7 +124,7 @@ const recipes = [
     lunch: true,
     dinner: false,
     steps: ['Grill chicken.', 'Mix with salad greens.', 'Serve with dressing.'],
-    user: 'testaccount',
+    user: 'testaccount1',
   },
 
   {
@@ -125,7 +142,7 @@ const recipes = [
       "Optional: Grill the burrito on a pan for a crispy outer layer.",
       "Serve with sour cream or guacamole on the side."
     ],
-    user: "testaccount"
+    user: "testaccount1"
   },
 
 
@@ -145,7 +162,7 @@ const recipes = [
       "Garnish with sesame seeds and sliced green onions.",
       "Serve hot and enjoy."
     ],
-    user: "testaccount"
+    user: "testaccount1"
   },
   
 
@@ -156,7 +173,7 @@ const recipes = [
     lunch: true,
     dinner: false,
     steps: ['Toast bread.', 'Add turkey and veggies.', 'Serve.'],
-    user: 'testaccount',
+    user: 'testaccount1',
   },
 
   {
@@ -174,7 +191,7 @@ const recipes = [
       "Top with a slice of cheese (optional) and the top bun.",
       "Serve with chips or a side salad."
     ],
-    user: "testaccount"
+    user: "testaccount1"
   },
   
 
@@ -186,7 +203,7 @@ const recipes = [
     lunch: true,
     dinner: false,
     steps: ['Chop vegetables.', 'Simmer in broth.', 'Serve hot.'],
-    user: 'testaccount',
+    user: 'testaccount1',
   },
 
 
@@ -206,7 +223,7 @@ const recipes = [
       "Slice the roll into even pieces with a sharp knife.",
       "Serve with soy sauce, pickled ginger, and wasabi."
     ],
-    user: "testaccount"
+    user: "testaccount1"
   },
   
 
@@ -222,7 +239,7 @@ const recipes = [
     lunch: false,
     dinner: true,
     steps: ['Cook pasta.', 'Prepare meat sauce.', 'Combine and serve.'],
-    user: 'testaccount',
+    user: 'testaccount1',
   },
 
 
@@ -242,7 +259,7 @@ const recipes = [
       "Prepare frozen fries according to package instructions (bake or fry).",
       "Serve the hot wings with fries on the side, and add ranch or blue cheese for dipping."
     ],
-    user: "testaccount"
+    user: "testaccount1"
   },
   
 
@@ -262,7 +279,7 @@ const recipes = [
       "Return the shrimp and scrambled eggs to the skillet and mix everything well.",
       "Garnish with chopped green onions and serve hot."
     ],
-    user: "testaccount"
+    user: "testaccount1"
   },
   
 
@@ -274,7 +291,7 @@ const recipes = [
     lunch: false,
     dinner: true,
     steps: ['Season salmon.', 'Grill until cooked.', 'Serve with lemon.'],
-    user: 'testaccount',
+    user: 'testaccount1',
   },
 
 
@@ -294,10 +311,9 @@ const recipes = [
       "Add cooked noodles or rice (optional) and stir.",
       "Serve hot with fresh parsley as garnish."
     ],
-    user: "testaccount"
+    user: "testaccount1"
   },
   
-
 
 
   {
@@ -316,7 +332,7 @@ const recipes = [
       "Season with salt, pepper, and a pinch of nutmeg.",
       "Serve hot with a side of crusty bread."
     ],
-    user: "testaccount"
+    user: "testaccount1"
   },
   
 
@@ -327,7 +343,7 @@ const recipes = [
     lunch: false,
     dinner: true,
     steps: ['Cook chicken.', 'Prepare curry sauce.', 'Serve with rice.'],
-    user: 'testaccount',
+    user: 'testaccount1',
   },
   // Add 4 more dinner recipes here
 ];
