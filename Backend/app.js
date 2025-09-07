@@ -604,20 +604,132 @@
 // module.exports = app;
 
 
+// // Load environment variables from .env (for local dev)
+// require('dotenv').config();
+// console.log("MONGO_URI from env:", process.env.MONGO_URI);
+
+// const express = require('express');
+// const mongoose = require('mongoose');
+// const cors = require('cors');
+// const path = require('path');
+// //const bcrypt = require('bcrypt');
+// const bcrypt = require("bcryptjs");
+
+// const session = require('express-session');
+// const MongoStore = require('connect-mongo');
+// const multer = require("multer");
+// const starterRecipes = require('./seedData');
+// const storage = multer.memoryStorage(); 
+// const upload = multer({ storage });
+
+// const User = require('./models/Users');
+// const { Recipe } = require('./models/Recipes'); 
+
+// const app = express();
+// require('dotenv').config();
+
+// // Middleware
+// app.use(express.static(path.join(__dirname, '../Frontend/public')));
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: true }));
+// // app.use(cors({
+// //   origin: 'http://localhost:3000',
+// //   credentials: true
+// // }));
+
+
+// app.use(cors({
+//   origin: "https://recipeprojecttwo.web.app",  // your Firebase Hosting URL
+//   methods: ["GET", "POST", "PUT", "DELETE"],
+//   credentials: true
+// }));
+
+
+// app.use(express.static(path.join(__dirname, '../Frontend/build')));
+
+// // Route to test frontend serving
+// app.get('/LandingPage', (req, res) => {
+//   res.sendFile(path.join(__dirname, '../Frontend/src/pages', 'LangingPage.js'));
+// });
+
+// // MongoDB Connection
+// const mongoURI = process.env.MONGO_URI;  // match your .env variable
+
+
+// mongoose.connect(mongoURI)
+//   .then(() => {
+//     console.log("✅ Connected to MongoDB");
+
+//     // Sessions AFTER DB is connected
+//     const SESSION_SECRET = process.env.SESSION_SECRET || 'your_secret_key_here';
+
+//     // app.use(session({
+//     //   secret: SESSION_SECRET,
+//     //   resave: false,
+//     //   saveUninitialized: false,
+//     //   store: MongoStore.create({
+//     //     mongoUrl: mongoURI,
+//     //     collectionName: 'sessions',
+//     //   }),
+//     //   cookie: {
+//     //     maxAge: 1000 * 60 * 60 * 24,
+//     //     httpOnly: true,
+//     //     secure: false, // set true in production (https)
+//     //   },
+//     // }));
+
+
+//     // app.use(session({
+//     //   secret: SESSION_SECRET,
+//     //   resave: false,
+//     //   saveUninitialized: false,
+//     //   store: MongoStore.create({
+//     //     mongoUrl: mongoURI,
+//     //     collectionName: 'sessions',
+//     //   }),
+//     //   cookie: {
+//     //     maxAge: 1000 * 60 * 60 * 24,
+//     //     httpOnly: true,
+//     //     secure: true,                
+//     //     sameSite: 'none',   
+//     //     domain: "recipeproject-2.onrender.com",        
+//     //   },
+//     // }));
+
+
+//     app.use(session({
+//       secret: SESSION_SECRET,
+//       resave: false,
+//       saveUninitialized: false,
+//       store: MongoStore.create({
+//         mongoUrl: mongoURI,
+//         collectionName: 'sessions',
+//       }),
+//       cookie: {
+//         maxAge: 1000 * 60 * 60 * 24,
+//         httpOnly: true,
+//         secure: process.env.NODE_ENV === "production", // ✅ true in production
+//         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax" // ✅ needed for Chrome
+//       },
+//     }));
+    
+
+
+
 // Load environment variables from .env (for local dev)
 require('dotenv').config();
 console.log("MONGO_URI from env:", process.env.MONGO_URI);
+console.log("NODE_ENV is:", process.env.NODE_ENV);
 
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
-//const bcrypt = require('bcrypt');
 const bcrypt = require("bcryptjs");
-
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const multer = require("multer");
+
 const starterRecipes = require('./seedData');
 const storage = multer.memoryStorage(); 
 const upload = multer({ storage });
@@ -626,93 +738,52 @@ const User = require('./models/Users');
 const { Recipe } = require('./models/Recipes'); 
 
 const app = express();
-require('dotenv').config();
 
-// Middleware
-app.use(express.static(path.join(__dirname, '../Frontend/public')));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-// app.use(cors({
-//   origin: 'http://localhost:3000',
-//   credentials: true
-// }));
-
-
+// --- CORS comes first ---
 app.use(cors({
   origin: "https://recipeprojecttwo.web.app",  // your Firebase Hosting URL
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
 
+// --- Parsers ---
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
+// --- Sessions (must be before routes & static) ---
+const mongoURI = process.env.MONGO_URI;
+const SESSION_SECRET = process.env.SESSION_SECRET || 'your_secret_key_here';
+
+app.use(session({
+  secret: SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: mongoURI,
+    collectionName: 'sessions',
+  }),
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24, // 1 day
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production", // ✅ only true in prod
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax" // ✅ Chrome-friendly
+  },
+}));
+
+// --- Static files ---
+app.use(express.static(path.join(__dirname, '../Frontend/public')));
 app.use(express.static(path.join(__dirname, '../Frontend/build')));
 
-// Route to test frontend serving
+// --- Routes (example test route) ---
 app.get('/LandingPage', (req, res) => {
-  res.sendFile(path.join(__dirname, '../Frontend/src/pages', 'LangingPage.js'));
+  res.sendFile(path.join(__dirname, '../Frontend/src/pages', 'LandingPage.js'));
 });
 
-// MongoDB Connection
-const mongoURI = process.env.MONGO_URI;  // match your .env variable
-
-
+// --- Connect to Mongo ---
 mongoose.connect(mongoURI)
-  .then(() => {
-    console.log("✅ Connected to MongoDB");
+  .then(() => console.log("✅ Connected to MongoDB"))
+  .catch(err => console.error("❌ MongoDB connection error:", err));
 
-    // Sessions AFTER DB is connected
-    const SESSION_SECRET = process.env.SESSION_SECRET || 'your_secret_key_here';
-
-    // app.use(session({
-    //   secret: SESSION_SECRET,
-    //   resave: false,
-    //   saveUninitialized: false,
-    //   store: MongoStore.create({
-    //     mongoUrl: mongoURI,
-    //     collectionName: 'sessions',
-    //   }),
-    //   cookie: {
-    //     maxAge: 1000 * 60 * 60 * 24,
-    //     httpOnly: true,
-    //     secure: false, // set true in production (https)
-    //   },
-    // }));
-
-
-    // app.use(session({
-    //   secret: SESSION_SECRET,
-    //   resave: false,
-    //   saveUninitialized: false,
-    //   store: MongoStore.create({
-    //     mongoUrl: mongoURI,
-    //     collectionName: 'sessions',
-    //   }),
-    //   cookie: {
-    //     maxAge: 1000 * 60 * 60 * 24,
-    //     httpOnly: true,
-    //     secure: true,                
-    //     sameSite: 'none',   
-    //     domain: "recipeproject-2.onrender.com",        
-    //   },
-    // }));
-
-
-    app.use(session({
-      secret: SESSION_SECRET,
-      resave: false,
-      saveUninitialized: false,
-      store: MongoStore.create({
-        mongoUrl: mongoURI,
-        collectionName: 'sessions',
-      }),
-      cookie: {
-        maxAge: 1000 * 60 * 60 * 24,
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production", // ✅ true in production
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax" // ✅ needed for Chrome
-      },
-    }));
-    
 
 
     // --- Routes go here ---
