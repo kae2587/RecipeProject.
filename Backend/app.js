@@ -604,7 +604,6 @@
 // module.exports = app;
 
 
-
 // Load environment variables from .env (for local dev)
 require('dotenv').config();
 console.log("MONGO_URI from env:", process.env.MONGO_URI);
@@ -629,6 +628,16 @@ const { Recipe } = require('./models/Recipes');
 const app = express();
 require('dotenv').config();
 
+// Middleware
+app.use(express.static(path.join(__dirname, '../Frontend/public')));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+// app.use(cors({
+//   origin: 'http://localhost:3000',
+//   credentials: true
+// }));
+
+
 app.use(cors({
   origin: "https://recipeprojecttwo.web.app",  // your Firebase Hosting URL
   methods: ["GET", "POST", "PUT", "DELETE"],
@@ -636,82 +645,75 @@ app.use(cors({
 }));
 
 
-// Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, '../Frontend/public')));
 app.use(express.static(path.join(__dirname, '../Frontend/build')));
 
-// app.use(cors({
-//   origin: 'http://localhost:3000',
-//   credentials: true
-// }));
-
-
-
-
-// // Route to test frontend serving
-// app.get('/LandingPage', (req, res) => {
-//   res.sendFile(path.join(__dirname, '../Frontend/src/pages', 'LangingPage.js'));
-// });
-
-// // MongoDB Connection
-// const mongoURI = process.env.MONGO_URI;  // match your .env variable
-
-
-// mongoose.connect(mongoURI)
-//   .then(() => {
-//     console.log("✅ Connected to MongoDB");
-
-//     // Sessions AFTER DB is connected
-//     const SESSION_SECRET = process.env.SESSION_SECRET || 'your_secret_key_here';
-
-
-
-//     app.use(session({
-//       secret: SESSION_SECRET,
-//       resave: false,
-//       saveUninitialized: false,
-//       store: MongoStore.create({
-//         mongoUrl: mongoURI,
-//         collectionName: 'sessions',
-//       }),
-//       cookie: {
-//         maxAge: 1000 * 60 * 60 * 24,
-//         httpOnly: true,
-//         secure: process.env.NODE_ENV === "production", // ✅ true in production
-//         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax" // ✅ needed for Chrome
-//       },
-//     }));
-    
-const mongoURI = process.env.MONGO_URI;
-const SESSION_SECRET = process.env.SESSION_SECRET || 'your_secret_key_here';
-
-app.use(session({
-  secret: SESSION_SECRET,
-  resave: false,
-  saveUninitialized: false,
-  store: MongoStore.create({
-    mongoUrl: mongoURI,
-    collectionName: 'sessions',
-  }),
-  cookie: {
-    maxAge: 1000 * 60 * 60 * 24, // 1 day
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production", // ✅ HTTPS only in prod
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax" // ✅ Chrome-friendly
-  },
-}));
-
-// Test route
+// Route to test frontend serving
 app.get('/LandingPage', (req, res) => {
-  res.sendFile(path.join(__dirname, '../Frontend/src/pages', 'LandingPage.js'));
+  res.sendFile(path.join(__dirname, '../Frontend/src/pages', 'LangingPage.js'));
 });
 
-// Connect to Mongo
+// MongoDB Connection
+const mongoURI = process.env.MONGO_URI;  // match your .env variable
+
+
 mongoose.connect(mongoURI)
-  .then(() => console.log("✅ Connected to MongoDB"))
-  .catch(err => console.error("❌ MongoDB connection error:", err));
+  .then(() => {
+    console.log("✅ Connected to MongoDB");
+
+    // Sessions AFTER DB is connected
+    const SESSION_SECRET = process.env.SESSION_SECRET || 'your_secret_key_here';
+
+    // app.use(session({
+    //   secret: SESSION_SECRET,
+    //   resave: false,
+    //   saveUninitialized: false,
+    //   store: MongoStore.create({
+    //     mongoUrl: mongoURI,
+    //     collectionName: 'sessions',
+    //   }),
+    //   cookie: {
+    //     maxAge: 1000 * 60 * 60 * 24,
+    //     httpOnly: true,
+    //     secure: false, // set true in production (https)
+    //   },
+    // }));
+
+
+    // app.use(session({
+    //   secret: SESSION_SECRET,
+    //   resave: false,
+    //   saveUninitialized: false,
+    //   store: MongoStore.create({
+    //     mongoUrl: mongoURI,
+    //     collectionName: 'sessions',
+    //   }),
+    //   cookie: {
+    //     maxAge: 1000 * 60 * 60 * 24,
+    //     httpOnly: true,
+    //     secure: true,                
+    //     sameSite: 'none',   
+    //     domain: "recipeproject-2.onrender.com",        
+    //   },
+    // }));
+
+
+    app.use(session({
+      secret: SESSION_SECRET,
+      resave: false,
+      saveUninitialized: false,
+      store: MongoStore.create({
+        mongoUrl: mongoURI,
+        collectionName: 'sessions',
+      }),
+      cookie: {
+        maxAge: 1000 * 60 * 60 * 24,
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production", // ✅ true in production
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax" // ✅ needed for Chrome
+      },
+    }));
+    
+
 
     // --- Routes go here ---
 
