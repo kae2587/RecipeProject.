@@ -89,7 +89,7 @@ mongoose.connect(mongoURI)
     //     domain: "recipeproject-2.onrender.com",        
     //   },
     // }));
-
+    app.set("trust proxy", 1); 
 
     app.use(session({
       secret: SESSION_SECRET,
